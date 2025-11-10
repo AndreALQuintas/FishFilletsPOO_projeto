@@ -1,12 +1,19 @@
 package pt.iscte.poo.game;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
+
 import objects.Water;
 import objects.BigFish;
 import objects.GameObject;
 import objects.SmallFish;
+import objects.SteelHorizontal;
+import objects.Wall;
 import pt.iscte.poo.utils.Point2D;
 
 public class Room {
@@ -68,20 +75,59 @@ public class Room {
 		r.setEngine(engine);
 		r.setName(f.getName());
 		
-		GameObject water = new Water(r);
-		water.setPosition(new Point2D(0, 0));
-		r.addObject(water);
-		
-		GameObject bf = BigFish.getInstance();
-		bf.setPosition(2, 2);
-		r.addObject(bf);
-		
-		GameObject sf = SmallFish.getInstance();
-		sf.setPosition(3, 3);
-		r.addObject(sf);
+		Scanner scan;
+		try {
+			scan = new Scanner(f);
+			int y = 0, width = -1;
+
+			while (scan.hasNextLine()) {
+				String line = scan.nextLine();
+				if (width == -1)
+					width = line.length();
+				for (int i = 0; i<width; i++) {
+					GameObject water = new Water(r);
+					water.setPosition(new Point2D(i, y));
+					r.addObject(water);
+					if (i < line.length())
+						instanciateChar(r, line.charAt(i), new Point2D(i, y));
+				}
+				y++;
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return r;
 		
+	}
+
+	private static void instanciateChar(Room r, char c, Point2D pos) {
+		GameObject gObj = null;
+		switch (c) {
+			case 'W':
+				gObj = new Wall(r);
+				break;
+			case 'B':
+				gObj = BigFish.getInstance();
+				break;
+			case 'S':
+				gObj = SmallFish.getInstance();
+				break;
+			case 'H':
+				gObj = new SteelHorizontal(r);
+				break;
+
+			
+			default:
+				break;
+
+			}
+			if (gObj != null) {
+				gObj.setPosition(pos);
+				r.addObject(gObj);
+			}
 	}
 	
 }

@@ -1,5 +1,6 @@
 package pt.iscte.poo.game;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class GameEngine implements Observer {
 	private Map<String,Room> rooms;
 	private Room currentRoom;
 	private int lastTickProcessed = 0;
+	private char currentPlayer = 'b';
 	
 	public GameEngine() {
 		rooms = new HashMap<String,Room>();
@@ -33,13 +35,24 @@ public class GameEngine implements Observer {
 		}
 	}
 
+	private void changePlayer() {
+		currentPlayer = (currentPlayer == 'b') ? 's' : 'b';
+	}
+
 	@Override
 	public void update(Observed source) {
 
 		if (ImageGUI.getInstance().wasKeyPressed()) {
 			int k = ImageGUI.getInstance().keyPressed();
-			SmallFish.getInstance().move(Direction.directionFor(k).asVector());
-			BigFish.getInstance().move(Direction.directionFor(k).asVector());
+			if (k == KeyEvent.VK_SPACE)
+				changePlayer();
+			else {
+				if (currentPlayer == 'b')
+					BigFish.getInstance().move(Direction.directionFor(k).asVector());
+				else
+					SmallFish.getInstance().move(Direction.directionFor(k).asVector());
+
+			}
 		}
 		int t = ImageGUI.getInstance().getTicks();
 		while (lastTickProcessed < t) {

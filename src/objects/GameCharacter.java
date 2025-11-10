@@ -13,9 +13,8 @@ public abstract class GameCharacter extends GameObject {
 	}
 	
 	public void move(Vector2D dir) {
-		Random rand = new Random();
-		Point2D destination = new Point2D(rand.nextInt(10), rand.nextInt(10)); 
-		setPosition(destination);	
+		Point2D destination = getPosition(); 
+		setPosition(destination.plus(dir));	
 	}
 
 	@Override
