@@ -18,6 +18,7 @@ public class GameEngine implements Observer {
 	private Room currentRoom;
 	private int lastTickProcessed = 0;
 	private char currentPlayer = 'b';
+	private final int INVALID_INPUT = -1;
 	
 	public GameEngine() {
 		rooms = new HashMap<String,Room>();
@@ -39,20 +40,30 @@ public class GameEngine implements Observer {
 		currentPlayer = (currentPlayer == 'b') ? 's' : 'b';
 	}
 
+	private int getInput() {
+		if (!ImageGUI.getInstance().wasKeyPressed()) return INVALID_INPUT;
+		return ImageGUI.getInstance().keyPressed();
+	}
+
+	private void treatInput(int key) {
+		if (key != INVALID_INPUT ) {
+			if (key == KeyEvent.VK_SPACE)
+				changePlayer();
+			else if (Direction.isDirection(key)){
+				if (currentPlayer == 'b')
+					BigFish.getInstance().move(Direction.directionFor(key).asVector());
+				else
+					SmallFish.getInstance().move(Direction.directionFor(key).asVector());
+			}
+		}
+	}
+
 	@Override
 	public void update(Observed source) {
 
-		if (ImageGUI.getInstance().wasKeyPressed()) {
-			int k = ImageGUI.getInstance().keyPressed();
-			if (k == KeyEvent.VK_SPACE)
-				changePlayer();
-			else if (Direction.isDirection(k)){
-				if (currentPlayer == 'b')
-					BigFish.getInstance().move(Direction.directionFor(k).asVector());
-				else
-					SmallFish.getInstance().move(Direction.directionFor(k).asVector());
-			}
-		}
+		int key = getInput();
+		treatInput(key);
+		
 		int t = ImageGUI.getInstance().getTicks();
 		while (lastTickProcessed < t) {
 			processTick();

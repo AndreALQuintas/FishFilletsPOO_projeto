@@ -1,7 +1,5 @@
 package objects;
 
-import java.util.Random;
-
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
@@ -13,8 +11,11 @@ public abstract class GameCharacter extends GameObject {
 	}
 	
 	public void move(Vector2D dir) {
-		Point2D destination = getPosition(); 
-		setPosition(destination.plus(dir));	
+		Point2D destination = getPosition().plus(dir); 
+		if (getRoom().getObjectAtPoint(destination) != null) {
+			doCollision(null);
+			setPosition(destination);
+		}	
 	}
 
 	@Override

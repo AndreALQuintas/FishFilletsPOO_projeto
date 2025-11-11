@@ -2,9 +2,7 @@ package pt.iscte.poo.game;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -69,6 +67,13 @@ public class Room {
 	public Point2D getBigFishStartingPosition() {
 		return bigFishStartingPosition;
 	}
+
+	public GameObject getObjectAtPoint(Point2D point) {
+		for (GameObject obj : objects) {
+			if (obj.getPosition().equals(point)) return obj;
+		}
+		return null;
+	}
 	
 	public static Room readRoom(File f, GameEngine engine) {
 		Room r = new Room();
@@ -95,7 +100,7 @@ public class Room {
 			}
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Ficheiro nao encontrado");
 			e.printStackTrace();
 		}
 		
