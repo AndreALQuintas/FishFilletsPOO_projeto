@@ -51,7 +51,6 @@ public class GameEngine implements Observer {
 					BigFish.getInstance().move(Direction.directionFor(k).asVector());
 				else
 					SmallFish.getInstance().move(Direction.directionFor(k).asVector());
-
 			}
 		}
 		int t = ImageGUI.getInstance().getTicks();
