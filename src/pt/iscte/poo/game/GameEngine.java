@@ -46,7 +46,7 @@ public class GameEngine implements Observer {
 			int k = ImageGUI.getInstance().keyPressed();
 			if (k == KeyEvent.VK_SPACE)
 				changePlayer();
-			else {
+			else if (Direction.isDirection(k)){
 				if (currentPlayer == 'b')
 					BigFish.getInstance().move(Direction.directionFor(k).asVector());
 				else
