@@ -8,6 +8,7 @@ public class BigFish extends GameCharacter {
 	
 	private BigFish(Room room) {
 		super(room);
+		addTag("Immovable");
 	}
 
 	public static BigFish getInstance() {
@@ -26,8 +27,8 @@ public class BigFish extends GameCharacter {
 
 	@Override
 	public boolean doCollision(GameObject other) {
-		System.out.println(this.getName() + " collides with " + other.getName() + ", other.hastag: " + other.hasTag("Pushable"));
-		if (other.hasTag("Pushable")) 
+		System.out.println(this.getName() + " collides with " + other.getName() + ", other.hastag: " + other.getTagList());
+		if (other.hasTag("Immovable")) 
 			return false;
 		return true;
 	}
