@@ -11,7 +11,7 @@ public class SmallFish extends GameCharacter {
 
 	private static SmallFish sf = new SmallFish(null);
 	private static final List<String> cantGoThroughTags = Arrays.asList(
-    	"Immovable", "Heavy"
+    	"Fixed", "Heavy"
 	);
 	private static final List<String> canPushTags = Arrays.asList(
     	"Light"
@@ -19,7 +19,7 @@ public class SmallFish extends GameCharacter {
 	
 	private SmallFish(Room room) {
 		super(room);
-		addTag("Immovable");
+		addTag("Fixed");
 	}
 
 	public static SmallFish getInstance() {
@@ -41,7 +41,7 @@ public class SmallFish extends GameCharacter {
 		GameObject otherDestinationObject = getRoom().getObjectAtPoint(otherDestination);
 		if (otherDestination.getX() >= 10 || otherDestination.getY() >= 10) 
 			return false;
-		if (otherDestinationObject != null && otherDestinationObject.hasTag("Immovable"))
+		if (otherDestinationObject != null && otherDestinationObject.hasTag("Fixed"))
 			return false;
 		other.setPosition(otherDestination);
 		return true;
@@ -57,6 +57,7 @@ public class SmallFish extends GameCharacter {
 			if (other.hasTag(tag))
 				if (!push(other, dir)) return false;
 		}
+		other.doCollision(this, dir);
 		return true;
 	}
 

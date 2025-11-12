@@ -5,10 +5,11 @@ import java.util.List;
 
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.gui.ImageTile;
+import pt.iscte.poo.utils.Collidable;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Tags;
 
-public abstract class GameObject implements ImageTile, Tags{
+public abstract class GameObject implements ImageTile, Tags, Collidable{
 	
 	private Point2D position;
 	private Room room;
