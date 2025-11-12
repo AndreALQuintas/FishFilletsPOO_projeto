@@ -6,6 +6,7 @@ public class Water extends GameObject{
 
 	public Water(Room room) {
 		super(room);
+		addTag("Background");
 	}
 
 	@Override

@@ -24,4 +24,12 @@ public class SmallFish extends GameCharacter {
 		return 1;
 	}
 
+	@Override
+	public boolean doCollision(GameObject other) {
+		System.out.println(this.getName() + " collides with " + other.getName() + ", other.hastag: " + other.hasTag("Pushable"));
+		if (other.hasTag("Pushable")) 
+			return false;
+		return true;
+	}
+
 }
