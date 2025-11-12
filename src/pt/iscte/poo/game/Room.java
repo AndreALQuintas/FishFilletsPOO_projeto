@@ -70,6 +70,7 @@ public class Room {
 
 	public GameObject getObjectAtPoint(Point2D point) {
 		for (GameObject obj : objects) {
+			if (obj.hasTag("Background")) continue;
 			if (obj.getPosition().equals(point)) return obj;
 		}
 		return null;
