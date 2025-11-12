@@ -1,11 +1,10 @@
 package objects;
 
 import pt.iscte.poo.game.Room;
-import pt.iscte.poo.utils.Collidable;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
-public abstract class GameCharacter extends GameObject implements Collidable {
+public abstract class GameCharacter extends GameObject {
 	
 	public GameCharacter(Room room) {
 		super(room);
