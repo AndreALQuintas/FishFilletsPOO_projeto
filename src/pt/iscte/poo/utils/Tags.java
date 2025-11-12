@@ -1,13 +1,11 @@
 package pt.iscte.poo.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface Tags {
     
     public List<String> getTagList();
     
-    // Default method implementations
     default boolean hasTag(String tag) {
         return getTagList().contains(tag);
     }
