@@ -17,7 +17,7 @@ public abstract class GameCharacter extends GameObject implements Collidable {
 		if (destinationObject == null) {
 			setPosition(destination);
 		} else {
-			if (doCollision(destinationObject))
+			if (doCollision(destinationObject, dir))
 				setPosition(destination);
 		}	
 	}

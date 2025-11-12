@@ -5,6 +5,7 @@ public class Bomb extends GameObject {
 	
 	public Bomb(Room room) {
 		super(room);
+		addTag("Light");
 	}
 	
 	@Override

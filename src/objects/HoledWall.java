@@ -6,6 +6,7 @@ public class HoledWall extends GameObject{
 	
 	public HoledWall(Room room) {
 		super(room);
+		addTag("OnlySmall");
 	}
 	
 	@Override

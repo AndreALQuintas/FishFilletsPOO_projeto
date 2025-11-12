@@ -6,6 +6,7 @@ public class SteelVertical extends GameObject{
 	
 	public SteelVertical (Room room) {
 		super(room);
+		addTag("Immovable");
 	}
 	
 	@Override
