@@ -1,22 +1,34 @@
 package objects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.utils.Point2D;
+import pt.iscte.poo.utils.Tags;
 
-public abstract class GameObject implements ImageTile{
+public abstract class GameObject implements ImageTile, Tags{
 	
 	private Point2D position;
 	private Room room;
+	private List<String> tagList;
 	
 	public GameObject(Room room) {
 		this.room = room;
+		tagList = new ArrayList<>();
 	}
 	
 	public GameObject(Point2D position, Room room) {
 		this.position = position;
 		this.room = room;
+		tagList = new ArrayList<>();
 	}
+
+	@Override
+    public List<String> getTagList() {
+        return tagList;
+    }
 
 	public void setPosition(int i, int j) {
 		position = new Point2D(i, j);
