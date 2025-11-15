@@ -20,6 +20,7 @@ public class SmallFish extends GameCharacter {
 	private SmallFish(Room room) {
 		super(room);
 		addTag("Fixed");
+		addTag("SmallFish");
 	}
 
 	public static SmallFish getInstance() {

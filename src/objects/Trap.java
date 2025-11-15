@@ -21,7 +21,8 @@ public class Trap extends GameObject{
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) { 
 		super.doCollision(other, dir);
-		System.out.println("Dead - Endgame...");
+		if (other.hasTag("BigFish"))
+			System.out.println("Dead");
 		return false;
 	}
 }
