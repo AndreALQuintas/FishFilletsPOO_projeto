@@ -7,6 +7,7 @@ public class SteelHorizontal extends GameObject {
 	public SteelHorizontal(Room room) {
 		super(room);
 		addTag("Fixed");
+		addTag("Wall");
 	}
 
 	@Override

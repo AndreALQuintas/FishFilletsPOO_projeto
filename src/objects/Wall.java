@@ -7,6 +7,7 @@ public class Wall extends GameObject {
 	public Wall(Room room) {
 		super(room);
 		addTag("Fixed");
+		addTag("Wall");
 	}
 
 	@Override

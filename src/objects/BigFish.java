@@ -11,7 +11,7 @@ public class BigFish extends GameCharacter {
 
 	private static BigFish bf = new BigFish(null);
 	private static final List<String> cantGoThroughTags = Arrays.asList(
-    	"OnlySmall", "Fixed"
+    	"OnlySmall", "Wall", "SmallFish"
 	);
 	private static final List<String> canPushTags = Arrays.asList(
     	"Light", "Heavy"
@@ -58,6 +58,7 @@ public class BigFish extends GameCharacter {
 			if (other.hasTag(tag))
 				if (!push(other, dir)) return false;
 		}
+
 		other.doCollision(this, dir);
 		return true;
 	}

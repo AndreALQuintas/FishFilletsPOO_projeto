@@ -25,6 +25,7 @@ import pt.iscte.poo.utils.Point2D;
 public class Room {
 	
 	private List<GameObject> objects;
+	private List<GameObject> nonBackgroundObjects;
 	private String roomName;
 	private GameEngine engine;
 	private Point2D smallFishStartingPosition;
@@ -32,6 +33,7 @@ public class Room {
 	
 	public Room() {
 		objects = new ArrayList<GameObject>();
+		nonBackgroundObjects = new ArrayList<GameObject>();
 	}
 
 	private void setName(String name) {
@@ -49,6 +51,12 @@ public class Room {
 	public void addObject(GameObject obj) {
 		objects.add(obj);
 		engine.updateGUI();
+		if (!obj.hasTag("Background"))
+			nonBackgroundObjects.add(obj);
+	}
+
+	public void endGame() {
+		engine.endGame();
 	}
 	
 	public void removeObject(GameObject obj) {
@@ -58,6 +66,10 @@ public class Room {
 	
 	public List<GameObject> getObjects() {
 		return objects;
+	}
+
+	public List<GameObject> getNonBackgroundObjects() {
+		return nonBackgroundObjects;
 	}
 
 	public void setSmallFishStartingPosition(Point2D heroStartingPosition) {
@@ -122,9 +134,11 @@ public class Room {
 		switch (c) {
 			case 'B':
 				gObj = BigFish.getInstance();
+				r.setBigFishStartingPosition(pos);
 				break;
 			case 'S':
 				gObj = SmallFish.getInstance();
+				r.setSmallFishStartingPosition(pos);
 				break;
 			case 'W':
 				gObj = new Wall(r);
@@ -156,7 +170,6 @@ public class Room {
 			case 'X':
 				gObj = new HoledWall(r);
 				break;
-
 			
 			default:
 				break;

@@ -29,7 +29,19 @@ public abstract class GameObject implements ImageTile, Tags, Collidable{
 
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) {
-        System.out.println(" auto collision with " + other.getName() + ", other.tags: " + other.getTagList());
+		if (other.hasTag("Wall")) return false;
+
+        System.out.println("auto collision with " + other.getName() + ", other.tags: " + other.getTagList());
+		if (this.hasTag("Heavy") && other.hasTag("SmallFish")) {
+			room.removeObject(other);
+			GameObject gObj = new BloodSplatter(room);
+			gObj.setPosition(other.getPosition());
+			room.addObject(gObj);
+			room.endGame();
+
+
+			return true;
+		}
         return false;
     }
 

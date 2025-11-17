@@ -6,6 +6,7 @@ public class Trunk extends GameObject {
 	public Trunk(Room room) {
 		super(room);
 		addTag("Fixed");
+		addTag("Wall");
 	}
 	
 	@Override

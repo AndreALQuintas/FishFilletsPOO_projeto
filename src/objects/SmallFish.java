@@ -11,7 +11,7 @@ public class SmallFish extends GameCharacter {
 
 	private static SmallFish sf = new SmallFish(null);
 	private static final List<String> cantGoThroughTags = Arrays.asList(
-    	"Fixed", "Heavy"
+    	"Wall", "Heavy", "BigFish"
 	);
 	private static final List<String> canPushTags = Arrays.asList(
     	"Light"

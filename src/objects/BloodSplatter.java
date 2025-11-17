@@ -1,22 +1,21 @@
 package objects;
-
 import pt.iscte.poo.game.Room;
 
-public class HoledWall extends GameObject{
+public class BloodSplatter extends GameObject {
 	
-	public HoledWall(Room room) {
+	public BloodSplatter(Room room) {
 		super(room);
-		addTag("OnlySmall");
-		addTag("Fixed");
+		addTag("Background");
 	}
 	
 	@Override
 	public String getName() {
-		return "holedWall";
+		return "bloodSplatter";
 	}
 	
 	@Override
 	public int getLayer() {
 		return 1;
 	}
+	
 }
