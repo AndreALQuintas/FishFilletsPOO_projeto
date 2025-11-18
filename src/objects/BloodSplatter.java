@@ -15,7 +15,7 @@ public class BloodSplatter extends GameObject {
 	
 	@Override
 	public int getLayer() {
-		return 1;
+		return 2;
 	}
 	
 }

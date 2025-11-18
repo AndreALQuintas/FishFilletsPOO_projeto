@@ -29,12 +29,12 @@ public class BigFish extends GameCharacter {
 	
 	@Override
 	public String getName() {
-		return "bigFishLeft";
+		return "bigFish" + getCurrentDir();
 	}
 
 	@Override
 	public int getLayer() {
-		return 1;
+		return 2;
 	}
 
 	private boolean push(GameObject other, Vector2D dir) {
@@ -58,8 +58,6 @@ public class BigFish extends GameCharacter {
 			if (other.hasTag(tag))
 				if (!push(other, dir)) return false;
 		}
-
-		other.doCollision(this, dir);
 		return true;
 	}
 }

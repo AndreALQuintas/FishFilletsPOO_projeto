@@ -10,6 +10,7 @@ import pt.iscte.poo.utils.Vector2D;
 public class SmallFish extends GameCharacter {
 
 	private static SmallFish sf = new SmallFish(null);
+	private String currentName = "bigFishLeft";
 	private static final List<String> cantGoThroughTags = Arrays.asList(
     	"Wall", "Heavy", "BigFish"
 	);
@@ -26,15 +27,15 @@ public class SmallFish extends GameCharacter {
 	public static SmallFish getInstance() {
 		return sf;
 	}
-	
+
 	@Override
 	public String getName() {
-		return "smallFishLeft";
+		return "smallFish" + getCurrentDir();
 	}
 
 	@Override
 	public int getLayer() {
-		return 1;
+		return 2;
 	}
 
 	private boolean push(GameObject other, Vector2D dir) {
@@ -58,7 +59,6 @@ public class SmallFish extends GameCharacter {
 			if (other.hasTag(tag))
 				if (!push(other, dir)) return false;
 		}
-		other.doCollision(this, dir);
 		return true;
 	}
 

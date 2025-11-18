@@ -32,13 +32,14 @@ public abstract class GameObject implements ImageTile, Tags, Collidable{
 		if (other.hasTag("Wall")) return false;
 
         System.out.println("auto collision with " + other.getName() + ", other.tags: " + other.getTagList());
-		if (this.hasTag("Heavy") && other.hasTag("SmallFish")) {
+		if (this.hasTag("Heavy") && other.hasTag("SmallFish") ||
+			this.hasTag("KillBigFish") && other.hasTag("BigFish")) {
+			
 			room.removeObject(other);
 			GameObject gObj = new BloodSplatter(room);
 			gObj.setPosition(other.getPosition());
 			room.addObject(gObj);
 			room.endGame();
-
 
 			return true;
 		}

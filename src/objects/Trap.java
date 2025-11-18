@@ -1,12 +1,12 @@
 package objects;
 
 import pt.iscte.poo.game.Room;
-import pt.iscte.poo.utils.Vector2D;
 
 public class Trap extends GameObject{
 	
 	public Trap(Room room) {
 		super(room);
+		addTag("KillBigFish");
 	}
 	
 	@Override
@@ -16,13 +16,5 @@ public class Trap extends GameObject{
 	
 	public int getLayer() {
 		return 1;
-	}
-
-	@Override
-	public boolean doCollision(GameObject other, Vector2D dir) { 
-		super.doCollision(other, dir);
-		if (other.hasTag("BigFish"))
-			System.out.println("Dead");
-		return false;
 	}
 }

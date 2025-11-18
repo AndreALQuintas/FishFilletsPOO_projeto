@@ -67,7 +67,7 @@ public class GameEngine implements Observer {
 			changePlayer();
 		else if (key == KeyEvent.VK_R)
 			resetCurrentRoom();
-		else if (Direction.isDirection(key)){
+		else if (Direction.isDirection(key) && gameRunning){
 			if (currentPlayer == 'b')
 				BigFish.getInstance().move(Direction.directionFor(key).asVector());
 			else
@@ -96,9 +96,9 @@ public class GameEngine implements Observer {
 		int key = getInput();
 		treatInput(key);
 		
-		if (!gameRunning) return;
 		int t = ImageGUI.getInstance().getTicks();
 		while (lastTickProcessed < t) {
+			if (!gameRunning) return;
 			processTick();
 		}
 		ImageGUI.getInstance().update();
