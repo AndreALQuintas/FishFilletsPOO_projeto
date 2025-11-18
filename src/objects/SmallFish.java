@@ -1,8 +1,5 @@
 package objects;
 
-import java.util.Arrays;
-import java.util.List;
-
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
@@ -10,13 +7,9 @@ import pt.iscte.poo.utils.Vector2D;
 public class SmallFish extends GameCharacter {
 
 	private static SmallFish sf = new SmallFish(null);
-	private String currentName = "bigFishLeft";
-	private static final List<String> cantGoThroughTags = Arrays.asList(
-    	"Wall", "Heavy", "BigFish"
-	);
-	private static final List<String> canPushTags = Arrays.asList(
-    	"Light"
-	);
+
+	private static final String cantGoThroughTags[] = {"Wall", "Heavy", "BigFish"};
+	private static final String canPushTags[] = {"Light"};
 	
 	private SmallFish(Room room) {
 		super(room);

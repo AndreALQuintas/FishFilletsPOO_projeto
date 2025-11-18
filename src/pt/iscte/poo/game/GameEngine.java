@@ -1,9 +1,7 @@
 package pt.iscte.poo.game;
 
-import java.util.List;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,9 +23,7 @@ public class GameEngine implements Observer {
 	private boolean gameRunning = true;
 	private char currentPlayer = 'b';
 	private static final int INVALID_INPUT = -1;
-	private static final List<String> nonGravityAffectedTags = Arrays.asList(
-    	"Fixed", "BigFish", "SmallFish"
-	);
+	private static final String nonGravityAffectedTags[] = {"Fixed", "BigFish", "SmallFish"};
 	
 	public GameEngine() {
 		rooms = new HashMap<String,Room>();
