@@ -5,6 +5,7 @@ public class Stone extends GameObject {
 
 	public Stone(Room room) {
 		super(room);
+		addTag("Heavy");
 	}
 	
 	@Override
