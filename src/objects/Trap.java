@@ -6,6 +6,7 @@ public class Trap extends GameObject{
 	
 	public Trap(Room room) {
 		super(room);
+		addTag("KillBigFish");
 	}
 	
 	@Override

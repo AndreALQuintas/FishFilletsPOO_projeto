@@ -7,16 +7,25 @@ import java.util.List;
 import java.util.Scanner;
 
 import objects.Water;
+import objects.Anchor;
 import objects.BigFish;
+import objects.Bomb;
+import objects.Cup;
 import objects.GameObject;
+import objects.HoledWall;
 import objects.SmallFish;
 import objects.SteelHorizontal;
+import objects.SteelVertical;
+import objects.Stone;
+import objects.Trap;
+import objects.Trunk;
 import objects.Wall;
 import pt.iscte.poo.utils.Point2D;
 
 public class Room {
 	
 	private List<GameObject> objects;
+	private List<GameObject> nonBackgroundObjects;
 	private String roomName;
 	private GameEngine engine;
 	private Point2D smallFishStartingPosition;
@@ -24,6 +33,7 @@ public class Room {
 	
 	public Room() {
 		objects = new ArrayList<GameObject>();
+		nonBackgroundObjects = new ArrayList<GameObject>();
 	}
 
 	private void setName(String name) {
@@ -41,6 +51,12 @@ public class Room {
 	public void addObject(GameObject obj) {
 		objects.add(obj);
 		engine.updateGUI();
+		if (!obj.hasTag("Background"))
+			nonBackgroundObjects.add(obj);
+	}
+
+	public void endGame() {
+		engine.endGame();
 	}
 	
 	public void removeObject(GameObject obj) {
@@ -50,6 +66,10 @@ public class Room {
 	
 	public List<GameObject> getObjects() {
 		return objects;
+	}
+
+	public List<GameObject> getNonBackgroundObjects() {
+		return nonBackgroundObjects;
 	}
 
 	public void setSmallFishStartingPosition(Point2D heroStartingPosition) {
@@ -90,12 +110,12 @@ public class Room {
 				String line = scan.nextLine();
 				if (width == -1)
 					width = line.length();
-				for (int i = 0; i<width; i++) {
+				for (int x = 0; x<width; x++) {
 					GameObject water = new Water(r);
-					water.setPosition(new Point2D(i, y));
+					water.setPosition(new Point2D(x, y));
 					r.addObject(water);
-					if (i < line.length())
-						instanciateChar(r, line.charAt(i), new Point2D(i, y));
+					if (x < line.length())
+						instanciateChar(r, line.charAt(x), new Point2D(x, y));
 				}
 				y++;
 			}
@@ -112,19 +132,44 @@ public class Room {
 	private static void instanciateChar(Room r, char c, Point2D pos) {
 		GameObject gObj = null;
 		switch (c) {
-			case 'W':
-				gObj = new Wall(r);
-				break;
 			case 'B':
 				gObj = BigFish.getInstance();
+				r.setBigFishStartingPosition(pos);
 				break;
 			case 'S':
 				gObj = SmallFish.getInstance();
+				r.setSmallFishStartingPosition(pos);
+				break;
+			case 'W':
+				gObj = new Wall(r);
 				break;
 			case 'H':
-				gObj = new SteelHorizontal(r);
+			gObj = new SteelHorizontal(r);
 				break;
-
+			case 'V':
+				gObj = new SteelVertical(r);
+				break;
+			case 'C':
+				gObj = new Cup(r);
+				break;
+			case 'R':
+				gObj = new Stone(r);
+				break;
+			case 'A':
+				gObj = new Anchor(r);
+				break;
+			case 'b':
+				gObj = new Bomb(r);
+				break;
+			case 'T':
+				gObj = new Trap(r);
+				break;
+			case 'Y':
+				gObj = new Trunk(r);
+				break;
+			case 'X':
+				gObj = new HoledWall(r);
+				break;
 			
 			default:
 				break;

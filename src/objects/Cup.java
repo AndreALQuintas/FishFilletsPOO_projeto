@@ -6,6 +6,7 @@ public class Cup extends GameObject {
 	
 	public Cup(Room room) {
 		super(room);
+		addTag("Light");
 	}
 	
 	@Override
