@@ -1,7 +1,7 @@
 WWWWWWWWWW
-W    C   W
-W  HHHH  W
 W        W
+W  C b C W
+W  HHHHH W
 W  B WXXXW
 W     
 W  S  A  W

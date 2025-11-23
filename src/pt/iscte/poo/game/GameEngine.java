@@ -87,10 +87,28 @@ public class GameEngine implements Observer {
 		gameRunning = true;
 	}
 
+	private void changeRoom(String room) {
+		currentRoom = rooms.get(room);
+		currentPlayer = 'b';
+		updateGUI();
+		SmallFish.getInstance().setRoom(currentRoom);
+		BigFish.getInstance().setRoom(currentRoom); 
+		SmallFish.getInstance().setPosition(currentRoom.getSmallFishStartingPosition());
+		BigFish.getInstance().setPosition(currentRoom.getBigFishStartingPosition());
+	}
+
 	@Override
 	public void update(Observed source) {
 		int key = getInput();
 		treatInput(key);
+
+		// está aqui temporariamente, depois mudar pa funcao move?
+		Point2D bfPos = BigFish.getInstance().getPosition();
+		Point2D sfPos = SmallFish.getInstance().getPosition();
+		if (bfPos.getX() >= 10 || bfPos.getX() < 0 || bfPos.getY() >= 10 || bfPos.getY() < 0)
+			if (sfPos.getX() >= 10 || sfPos.getX() < 0 || sfPos.getY() >= 10 || sfPos.getY() < 0) {
+				changeRoom("room1.txt");
+			}
 		
 		int t = ImageGUI.getInstance().getTicks();
 		while (lastTickProcessed < t) {
