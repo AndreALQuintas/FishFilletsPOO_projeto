@@ -2,9 +2,9 @@ WWWWWWWWWW
 W    C   W
 W  HH    W
 W        W
-W  B WXXXW
+W    WXXXW
 W      A W
 W  S     W
-W        W
+W     B  W
 W  T     W
 WWWWWWWWWW

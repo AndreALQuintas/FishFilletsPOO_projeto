@@ -32,6 +32,7 @@ public class GameEngine implements Observer {
 		updateGUI();		
 		SmallFish.getInstance().setRoom(currentRoom);
 		BigFish.getInstance().setRoom(currentRoom);
+		changeRoom(currentRoom.getName());
 	}
 
 	private void loadGame() {
@@ -78,6 +79,7 @@ public class GameEngine implements Observer {
 
 	public void resetCurrentRoom(){
 		Room r = Room.readRoom(new File("./rooms/" + currentRoom.getName()), this);
+		System.out.println(rooms);
 		rooms.put(currentRoom.getName(),r);
 		currentRoom = r;
 		currentPlayer = 'b';
@@ -85,6 +87,7 @@ public class GameEngine implements Observer {
 		SmallFish.getInstance().setRoom(currentRoom);
 		BigFish.getInstance().setRoom(currentRoom);
 		gameRunning = true;
+		lastTickProcessed = ImageGUI.getInstance().getTicks();
 	}
 
 	private void changeRoom(String room) {
@@ -109,6 +112,35 @@ public class GameEngine implements Observer {
 			if (sfPos.getX() >= 10 || sfPos.getX() < 0 || sfPos.getY() >= 10 || sfPos.getY() < 0) {
 				changeRoom("room1.txt");
 			}
+
+		for (GameObject gObj : currentRoom.getNonBackgroundObjects()) {
+			Vector2D dir = Direction.UP.asVector();
+			Point2D above = gObj.getPosition().plus(dir);
+			GameObject aboveObj = currentRoom.getObjectAtPoint(above);
+			if (aboveObj == null) {
+				if (gObj.hasTag("TempHeavy")) {
+					gObj.removeTag("TempHeavy");
+					gObj.removeTag("Heavy");
+				}
+
+				if (gObj.hasTag("TempSuperHeavy")) {
+					gObj.removeTag("TempSuperHeavy");
+					gObj.removeTag("SuperHeavy");
+				}
+			} else {
+
+				if (gObj.hasTag("Light") && aboveObj.hasTag("Light")) {
+					gObj.addTag("Heavy");
+					gObj.addTag("TempHeavy");
+				}
+
+				if (gObj.hasTag("Heavy") && aboveObj.hasTag("Heavy") && !aboveObj.hasTag("TempHeavy")) {
+					gObj.addTag("SuperHeavy");
+					gObj.addTag("TempSuperHeavy");
+				}
+			}
+		}
+
 		
 		int t = ImageGUI.getInstance().getTicks();
 		while (lastTickProcessed < t) {

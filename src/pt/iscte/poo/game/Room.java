@@ -135,6 +135,7 @@ public class Room {
 			case 'B':
 				gObj = BigFish.getInstance();
 				r.setBigFishStartingPosition(pos);
+				System.out.println("room: " + r.getName() + ", pos: " + pos);
 				break;
 			case 'S':
 				gObj = SmallFish.getInstance();
