@@ -25,6 +25,8 @@ public abstract class GameCharacter extends GameObject {
 		if (otherDestinationObject == null) {
 			other.setPosition(otherDestination);
 			return true;
+		} else if (hasTag("SmallFish")) {
+			return false;
 		}
 		
 		if (otherDestinationObject.hasTag("Fixed")) {

@@ -3,8 +3,8 @@ W        W
 W  C b C W
 W  HHHHH W
 W  A WXXXW
-W  A  S
+W     S
 W     A  W
 W    HHH W
-W  B  T  W
+W  BY T  W
 WWWWWWWWWW

@@ -2,11 +2,15 @@ package pt.iscte.poo.game;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import objects.SmallFish;
 import objects.BigFish;
+import objects.Bomb;
+import objects.Explosion;
 import objects.GameObject;
 import pt.iscte.poo.gui.ImageGUI;
 import pt.iscte.poo.observer.Observed;
@@ -100,19 +104,7 @@ public class GameEngine implements Observer {
 		BigFish.getInstance().setPosition(currentRoom.getBigFishStartingPosition());
 	}
 
-	@Override
-	public void update(Observed source) {
-		int key = getInput();
-		treatInput(key);
-
-		// está aqui temporariamente, depois mudar pa funcao move?
-		Point2D bfPos = BigFish.getInstance().getPosition();
-		Point2D sfPos = SmallFish.getInstance().getPosition();
-		if (bfPos.getX() >= 10 || bfPos.getX() < 0 || bfPos.getY() >= 10 || bfPos.getY() < 0)
-			if (sfPos.getX() >= 10 || sfPos.getX() < 0 || sfPos.getY() >= 10 || sfPos.getY() < 0) {
-				changeRoom("room1.txt");
-			}
-
+	private void updateFallingState() {
 		for (GameObject gObj : currentRoom.getNonBackgroundObjects()) {
 			Vector2D dir = Direction.UP.asVector();
 			Point2D above = gObj.getPosition().plus(dir);
@@ -141,6 +133,21 @@ public class GameEngine implements Observer {
 			}
 		}
 
+	}
+
+	@Override
+	public void update(Observed source) {
+		int key = getInput();
+		treatInput(key);
+
+		Point2D bfPos = BigFish.getInstance().getPosition();
+		Point2D sfPos = SmallFish.getInstance().getPosition();
+		if (bfPos.getX() >= 10 || bfPos.getX() < 0 || bfPos.getY() >= 10 || bfPos.getY() < 0)
+			if (sfPos.getX() >= 10 || sfPos.getX() < 0 || sfPos.getY() >= 10 || sfPos.getY() < 0) {
+				changeRoom("room1.txt");
+			}
+
+		updateFallingState();
 		
 		int t = ImageGUI.getInstance().getTicks();
 		while (lastTickProcessed < t) {
@@ -156,6 +163,9 @@ public class GameEngine implements Observer {
 		GameObject destinationObject = currentRoom.getObjectAtPoint(destination);
 		if (destinationObject != null) {
 			if (!gObj.doCollision(destinationObject, dir)) return;
+		} else if (gObj.getName().equals("bomb")) {
+			Bomb bomb = (Bomb) gObj;
+			bomb.isFalling = true;
 		}
 		gObj.setPosition(destination);
 		
@@ -164,9 +174,19 @@ public class GameEngine implements Observer {
 	private void processTick() {		
 		lastTickProcessed++;
 		System.out.println("Tick done!");
-		for (GameObject gObj : currentRoom.getNonBackgroundObjects()) {
+		List<GameObject> nonBackgroundObjects = new ArrayList<GameObject>(currentRoom.getNonBackgroundObjects());
+		for (GameObject gObj : nonBackgroundObjects) {
 			if (!hasNonGravityAffectedTag(gObj))
 				applyGravity(gObj);
+		}
+
+		//TEMPORARIO MUDAR DEPOIS PQ TA UMA MERDA
+		List<GameObject> timeAffectedObjects = new ArrayList<GameObject>(currentRoom.getTimeAffectedObjects());
+		for (GameObject gObj : timeAffectedObjects) {
+			if (((Explosion) gObj).isDone())
+				{currentRoom.removeObject(gObj);}
+			else
+				{((Explosion) gObj).setDone();}
 		}
 	}
 

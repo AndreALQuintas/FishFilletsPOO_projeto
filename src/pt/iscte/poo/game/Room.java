@@ -26,6 +26,7 @@ public class Room {
 	
 	private List<GameObject> objects;
 	private List<GameObject> nonBackgroundObjects;
+	private List<GameObject> timeAffectedObjects;
 	private String roomName;
 	private GameEngine engine;
 	private Point2D smallFishStartingPosition;
@@ -34,6 +35,7 @@ public class Room {
 	public Room() {
 		objects = new ArrayList<GameObject>();
 		nonBackgroundObjects = new ArrayList<GameObject>();
+		timeAffectedObjects = new ArrayList<GameObject>();
 	}
 
 	private void setName(String name) {
@@ -50,9 +52,11 @@ public class Room {
 
 	public void addObject(GameObject obj) {
 		objects.add(obj);
-		engine.updateGUI();
 		if (!obj.hasTag("Background"))
 			nonBackgroundObjects.add(obj);
+		if (obj.hasTag("TimeAffected"))
+			timeAffectedObjects.add(obj);
+		engine.updateGUI();
 	}
 
 	public void endGame() {
@@ -61,6 +65,10 @@ public class Room {
 	
 	public void removeObject(GameObject obj) {
 		objects.remove(obj);
+		if (!obj.hasTag("Background"))
+			nonBackgroundObjects.remove(obj);
+		if (obj.hasTag("TimeAffected"))
+			timeAffectedObjects.remove(obj);
 		engine.updateGUI();
 	}
 	
@@ -70,6 +78,10 @@ public class Room {
 
 	public List<GameObject> getNonBackgroundObjects() {
 		return nonBackgroundObjects;
+	}
+
+	public List<GameObject> getTimeAffectedObjects() {
+		return timeAffectedObjects;
 	}
 
 	public void setSmallFishStartingPosition(Point2D heroStartingPosition) {
