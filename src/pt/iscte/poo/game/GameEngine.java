@@ -165,7 +165,7 @@ public class GameEngine implements Observer {
 			if (!gObj.doCollision(destinationObject, dir)) return;
 		} else if (gObj.getName().equals("bomb")) {
 			Bomb bomb = (Bomb) gObj;
-			bomb.isFalling = true;
+			bomb.startFalling();
 		}
 		gObj.setPosition(destination);
 		

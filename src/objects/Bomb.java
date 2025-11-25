@@ -6,7 +6,7 @@ import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
 public class Bomb extends GameObject {
-	public boolean isFalling = false;
+	private boolean isFalling = false;
 	public Bomb(Room room) {
 		super(room);
 		addTag("Light");
@@ -15,6 +15,10 @@ public class Bomb extends GameObject {
 	@Override
 	public String getName() {
 		return "bomb";
+	}
+
+	public void startFalling() {
+		isFalling = true;
 	}
 
 	private void doExplosion() {
