@@ -7,6 +7,7 @@ public class Trunk extends GameObject {
 		super(room);
 		addTag("Fixed");
 		addTag("Wall");
+		addTag("Smashable");
 	}
 	
 	@Override
