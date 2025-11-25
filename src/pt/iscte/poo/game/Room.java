@@ -153,45 +153,25 @@ public class Room {
 				gObj = SmallFish.getInstance();
 				r.setSmallFishStartingPosition(pos);
 				break;
-			case 'W':
-				gObj = new Wall(r);
-				break;
-			case 'H':
-			gObj = new SteelHorizontal(r);
-				break;
-			case 'V':
-				gObj = new SteelVertical(r);
-				break;
-			case 'C':
-				gObj = new Cup(r);
-				break;
-			case 'R':
-				gObj = new Stone(r);
-				break;
-			case 'A':
-				gObj = new Anchor(r);
-				break;
-			case 'b':
-				gObj = new Bomb(r);
-				break;
-			case 'T':
-				gObj = new Trap(r);
-				break;
-			case 'Y':
-				gObj = new Trunk(r);
-				break;
-			case 'X':
-				gObj = new HoledWall(r);
-				break;
+			case 'W': gObj = new Wall(r);	break;
+			case 'H': gObj = new SteelHorizontal(r); break;
+			case 'V': gObj = new SteelVertical(r); break;
+			case 'C': gObj = new Cup(r); break;
+			case 'R': gObj = new Stone(r); break;
+			case 'A': gObj = new Anchor(r);	break;
+			case 'b': gObj = new Bomb(r); break;
+			case 'T': gObj = new Trap(r); break;
+			case 'Y': gObj = new Trunk(r); break;
+			case 'X': gObj = new HoledWall(r); break;
 			
 			default:
 				break;
 
-			}
-			if (gObj != null) {
-				gObj.setPosition(pos);
-				r.addObject(gObj);
-			}
+		}
+		if (gObj != null) {
+			gObj.setPosition(pos);
+			r.addObject(gObj);
+		}	
 	}
 	
 }

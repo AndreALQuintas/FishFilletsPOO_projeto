@@ -30,6 +30,9 @@ public class Bomb extends GameObject {
 			GameObject gObj = new Explosion(r);
 			gObj.setPosition(pos);
 			r.addObject(gObj);
+			GameObject placedObject = r.getObjectAtPoint(pos);
+			if (placedObject != null)
+				r.removeObject(placedObject);
 		}
 	}
 

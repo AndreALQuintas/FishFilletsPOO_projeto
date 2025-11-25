@@ -6,7 +6,7 @@ import pt.iscte.poo.utils.Vector2D;
 public class BigFish extends GameCharacter {
 
 	private static BigFish bf = new BigFish(null);
-	private static final String cantGoThroughTags[] = {"OnlySmall", "Wall", "SmallFish"};
+	private static final String cantGoThroughTags[] = {"OnlySmall", "Wall", "SmallFish", "SuperHeavy"};
 	private static final String canPushTags[] = {"Light", "Heavy"};
 	
 	private BigFish(Room room) {
