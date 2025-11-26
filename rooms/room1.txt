@@ -4,7 +4,7 @@ W  HH    W
 W        W
 W    WXXXW
 W      A W
-W  S     W
+W  S     
 W     B  W
 W  T     W
 WWWWWWWWWW

@@ -11,6 +11,7 @@ import objects.SmallFish;
 import objects.BigFish;
 import objects.Bomb;
 import objects.Explosion;
+import objects.GameCharacter;
 import objects.GameObject;
 import pt.iscte.poo.gui.ImageGUI;
 import pt.iscte.poo.observer.Observed;
@@ -56,7 +57,11 @@ public class GameEngine implements Observer {
 	}
 
 	private void changePlayer() {
-		currentPlayer = (currentPlayer == 'b') ? 's' : 'b';
+		if (currentPlayer == 'b') {
+			currentPlayer = (SmallFish.getInstance().leftMap()) ? 'b' : 's';
+		} else {
+			currentPlayer = (BigFish.getInstance().leftMap()) ? 's' : 'b';
+		}
 	}
 
 	private int getInput() {
@@ -71,18 +76,35 @@ public class GameEngine implements Observer {
 		else if (key == KeyEvent.VK_R)
 			resetCurrentRoom();
 		else if (Direction.isDirection(key) && gameRunning){
-			if (currentPlayer == 'b')
+			if (currentPlayer == 'b') {
 				BigFish.getInstance().move(Direction.directionFor(key).asVector());
-			else
+			} else {
 				SmallFish.getInstance().move(Direction.directionFor(key).asVector());
+			}
+
+			GameCharacter currentPlayerInstance = (currentPlayer == 'b') ? BigFish.getInstance() : SmallFish.getInstance();
+			Point2D newPos = currentPlayerInstance.getPosition();
+			if (newPos.getX() < 0 || newPos.getX() > 9 ||newPos.getY() < 0 ||newPos.getY() > 9) {
+				currentPlayerInstance.setLeftMap();
+				currentRoom.removeObject(currentPlayerInstance);
+				changePlayer();
+
+				if (bothPlayersLeftMap()) {
+					goToNextRoom();
+				}
+			}
+
 			updateMoveCount();
 			updateHeader();
 		}
 	}
 
+	private boolean bothPlayersLeftMap() {
+		return BigFish.getInstance().leftMap() && SmallFish.getInstance().leftMap();
+	}
+
 	public void endGame() {
 		gameRunning = false;
-		
 	}
 
 	public void resetCurrentRoom(){
@@ -92,20 +114,34 @@ public class GameEngine implements Observer {
 		currentRoom = r;
 		currentPlayer = 'b';
 		updateGUI();
-		SmallFish.getInstance().setRoom(currentRoom);
-		BigFish.getInstance().setRoom(currentRoom);
+		
+		SmallFish.getInstance().reset(currentRoom);
+		BigFish.getInstance().reset(currentRoom);
+
 		gameRunning = true;
 		lastTickProcessed = ImageGUI.getInstance().getTicks();
+	}
+
+	private void goToNextRoom() {
+		String currentRoomName = currentRoom.getName();
+		int currentRoomNumber = currentRoomName.charAt(currentRoomName.indexOf('.') - 1);
+		String nextRoomName = "room" + ((char)(currentRoomNumber+1) + ".txt");
+		
+		if (!rooms.containsKey(nextRoomName)) {
+			System.out.println("!!!JOGO ACABOU!!!");
+			return;
+		}
+
+		changeRoom(nextRoomName);
+		
 	}
 
 	private void changeRoom(String room) {
 		currentRoom = rooms.get(room);
 		currentPlayer = 'b';
 		updateGUI();
-		SmallFish.getInstance().setRoom(currentRoom);
-		BigFish.getInstance().setRoom(currentRoom); 
-		SmallFish.getInstance().setPosition(currentRoom.getSmallFishStartingPosition());
-		BigFish.getInstance().setPosition(currentRoom.getBigFishStartingPosition());
+		SmallFish.getInstance().reset(currentRoom);
+		BigFish.getInstance().reset(currentRoom);
 	}
 
 	private void updateFallingState() {
@@ -143,13 +179,6 @@ public class GameEngine implements Observer {
 	public void update(Observed source) {
 		int key = getInput();
 		treatInput(key);
-		
-		Point2D bfPos = BigFish.getInstance().getPosition();
-		Point2D sfPos = SmallFish.getInstance().getPosition();
-		if (bfPos.getX() >= 10 || bfPos.getX() < 0 || bfPos.getY() >= 10 || bfPos.getY() < 0)
-			if (sfPos.getX() >= 10 || sfPos.getX() < 0 || sfPos.getY() >= 10 || sfPos.getY() < 0) {
-				changeRoom("room1.txt");
-			}
 
 		updateFallingState();
 		
@@ -214,7 +243,6 @@ public class GameEngine implements Observer {
 		int minutes=seconds/60;
 		seconds-=minutes*60;
 		
-		System.out.println(minutes);
 		return minutes + ":" + seconds;
 	}
 	
