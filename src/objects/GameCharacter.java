@@ -6,7 +6,8 @@ import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
 public abstract class GameCharacter extends GameObject {
-	public int moveCount=0;
+	private int moveCount=0;
+	private boolean leftMap = false;
 	public abstract String[] getCantGoThroughTags();
     public abstract String[] getCanPushTags();
 	private String currentDir = "Left";
@@ -16,6 +17,18 @@ public abstract class GameCharacter extends GameObject {
 
 	public String getCurrentDir() {
 		return currentDir;
+	}
+
+	public boolean leftMap() {
+		return leftMap;
+	}
+
+	public void setLeftMap() {
+		leftMap = true;
+	}
+
+	public void resetLeftMap() {
+		leftMap = false;
 	}
 
 	public boolean push(GameObject other, Vector2D dir) {
@@ -70,6 +83,16 @@ public abstract class GameCharacter extends GameObject {
 		other.setPosition(otherDestination);
 		return true;
 	}
+
+	public void reset(Room r) {
+		setRoom(r);
+		if (hasTag("BigFish"))
+			setPosition(r.getBigFishStartingPosition());
+		else
+			setPosition(r.getSmallFishStartingPosition());
+		resetLeftMap();
+		currentDir = "Right";
+	}
 	
 	public void move(Vector2D dir) {
 
@@ -94,6 +117,7 @@ public abstract class GameCharacter extends GameObject {
 				moveCount++;
 			}
 		}	
+
 	}
 	
 	public int getMoves() {
