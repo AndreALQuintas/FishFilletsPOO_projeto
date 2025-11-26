@@ -20,7 +20,8 @@ import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
 public class GameEngine implements Observer {
-	
+	private int totalMoveCount;
+	private ImageGUI gui = ImageGUI.getInstance();
 	private Map<String,Room> rooms;
 	private Room currentRoom;
 	private int lastTickProcessed = 0;
@@ -38,6 +39,7 @@ public class GameEngine implements Observer {
 		BigFish.getInstance().setRoom(currentRoom);
 		changeRoom(currentRoom.getName());
 	}
+	
 
 	private void loadGame() {
 		File[] files = new File("./rooms").listFiles();
@@ -73,6 +75,8 @@ public class GameEngine implements Observer {
 				BigFish.getInstance().move(Direction.directionFor(key).asVector());
 			else
 				SmallFish.getInstance().move(Direction.directionFor(key).asVector());
+			updateMoveCount();
+			updateHeader();
 		}
 	}
 
@@ -139,7 +143,7 @@ public class GameEngine implements Observer {
 	public void update(Observed source) {
 		int key = getInput();
 		treatInput(key);
-
+		
 		Point2D bfPos = BigFish.getInstance().getPosition();
 		Point2D sfPos = SmallFish.getInstance().getPosition();
 		if (bfPos.getX() >= 10 || bfPos.getX() < 0 || bfPos.getY() >= 10 || bfPos.getY() < 0)
@@ -149,12 +153,12 @@ public class GameEngine implements Observer {
 
 		updateFallingState();
 		
-		int t = ImageGUI.getInstance().getTicks();
+		int t = gui.getTicks();
 		while (lastTickProcessed < t) {
 			if (!gameRunning) return;
 			processTick();
 		}
-		ImageGUI.getInstance().update();
+		gui.update();
 	}
 
 	private void applyGravity(GameObject gObj) {
@@ -179,6 +183,9 @@ public class GameEngine implements Observer {
 			if (!hasNonGravityAffectedTag(gObj))
 				applyGravity(gObj);
 		}
+	
+		updateHeader();
+		
 
 		//TEMPORARIO MUDAR DEPOIS PQ TA UMA MERDA
 		List<GameObject> timeAffectedObjects = new ArrayList<GameObject>(currentRoom.getTimeAffectedObjects());
@@ -197,4 +204,22 @@ public class GameEngine implements Observer {
 		}
 	}
 	
+	public void updateMoveCount() {
+		totalMoveCount = BigFish.getInstance().getMoves()+SmallFish.getInstance().getMoves();
+	}
+	
+	public String totalTime() {
+		
+		int seconds=(gui.getTicks()/2);
+		int minutes=seconds/60;
+		seconds-=minutes*60;
+		
+		System.out.println(minutes);
+		return minutes + ":" + seconds;
+	}
+	
+	public void updateHeader() {
+		gui.setStatusMessage((currentPlayer=='b'? "Peixe Grande" : "Peixe Pequeno")
+				 + " | Passos: " + totalMoveCount + " | " + totalTime());
+	}
 }
