@@ -72,10 +72,15 @@ public abstract class GameCharacter extends GameObject {
 	}
 	
 	public void move(Vector2D dir) {
+
 		if (dir.equals(Direction.LEFT.asVector())) {
 			currentDir = "Left";
 		} else if (dir.equals(Direction.RIGHT.asVector())) {
 			currentDir = "Right";
+		} else if (dir.equals(Direction.DOWN.asVector())) {
+			currentDir = "Down";
+		} else if (dir.equals(Direction.UP.asVector())) {
+			currentDir = "Up";
 		}
 		Point2D destination = getPosition().plus(dir); 
 		GameObject destinationObject = getRoom().getObjectAtPoint(destination);
