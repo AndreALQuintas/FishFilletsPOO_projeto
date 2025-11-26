@@ -6,6 +6,7 @@ import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
 public abstract class GameCharacter extends GameObject {
+	public int moveCount=0;
 	public abstract String[] getCantGoThroughTags();
     public abstract String[] getCanPushTags();
 	private String currentDir = "Left";
@@ -85,17 +86,25 @@ public abstract class GameCharacter extends GameObject {
 		GameObject destinationObject = getRoom().getObjectAtPoint(destination);
 		if (destinationObject == null) {
 			setPosition(destination);
+			moveCount++;
 		} else {
 			if (doCollision(destinationObject, dir)) {
 				setPosition(destination);
 				destinationObject.doCollision(this, dir);
+				moveCount++;
 			}
 		}	
 	}
-
+	
+	public int getMoves() {
+		return moveCount;
+	}
 	@Override
 	public int getLayer() {
 		return 2;
 	}
 	
+	public void resetMoveCounter() {
+		moveCount = 0;
+	}
 }
