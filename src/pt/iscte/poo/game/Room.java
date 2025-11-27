@@ -7,19 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import objects.Water;
-import objects.Anchor;
 import objects.BigFish;
-import objects.Bomb;
-import objects.Cup;
 import objects.GameObject;
-import objects.HoledWall;
 import objects.SmallFish;
-import objects.SteelHorizontal;
-import objects.SteelVertical;
-import objects.Stone;
-import objects.Trap;
-import objects.Trunk;
-import objects.Wall;
+import pt.iscte.poo.utils.ObjectList;
 import pt.iscte.poo.utils.Point2D;
 
 public class Room {
@@ -28,9 +19,10 @@ public class Room {
 	private List<GameObject> nonBackgroundObjects;
 	private List<GameObject> timeAffectedObjects;
 	private String roomName;
-	private GameEngine engine;
+	private Engine engine;
 	private Point2D smallFishStartingPosition;
 	private Point2D bigFishStartingPosition;
+	private static final int roomWidth = 10;
 	
 	public Room() {
 		objects = new ArrayList<GameObject>();
@@ -46,7 +38,7 @@ public class Room {
 		return roomName;
 	}
 	
-	private void setEngine(GameEngine engine) {
+	private void setEngine(Engine engine) {
 		this.engine = engine;
 	}
 
@@ -108,7 +100,7 @@ public class Room {
 		return null;
 	}
 	
-	public static Room readRoom(File f, GameEngine engine) {
+	public static Room readRoom(File f, Engine engine) {
 		Room r = new Room();
 		r.setEngine(engine);
 		r.setName(f.getName());
@@ -116,12 +108,9 @@ public class Room {
 		Scanner scan;
 		try {
 			scan = new Scanner(f);
-			int y = 0, width = -1;
-
+			int y = 0, width = roomWidth;
 			while (scan.hasNextLine()) {
 				String line = scan.nextLine();
-				if (width == -1)
-					width = line.length();
 				for (int x = 0; x<width; x++) {
 					GameObject water = new Water(r);
 					water.setPosition(new Point2D(x, y));
@@ -136,38 +125,20 @@ public class Room {
 			System.out.println("Ficheiro nao encontrado");
 			e.printStackTrace();
 		}
-		
+
 		return r;
 		
 	}
 
 	private static void instanciateChar(Room r, char c, Point2D pos) {
-		GameObject gObj = null;
-		switch (c) {
-			case 'B':
-				gObj = BigFish.getInstance();
-				r.setBigFishStartingPosition(pos);
-				System.out.println("room: " + r.getName() + ", pos: " + pos);
-				break;
-			case 'S':
-				gObj = SmallFish.getInstance();
-				r.setSmallFishStartingPosition(pos);
-				break;
-			case 'W': gObj = new Wall(r);	break;
-			case 'H': gObj = new SteelHorizontal(r); break;
-			case 'V': gObj = new SteelVertical(r); break;
-			case 'C': gObj = new Cup(r); break;
-			case 'R': gObj = new Stone(r); break;
-			case 'A': gObj = new Anchor(r);	break;
-			case 'b': gObj = new Bomb(r); break;
-			case 'T': gObj = new Trap(r); break;
-			case 'Y': gObj = new Trunk(r); break;
-			case 'X': gObj = new HoledWall(r); break;
-			
-			default:
-				break;
+		GameObject gObj = ObjectList.instantiate(c, r);
 
+		if (gObj instanceof BigFish) {
+			r.setBigFishStartingPosition(pos);
+		} else if (gObj instanceof SmallFish) {
+			r.setSmallFishStartingPosition(pos);
 		}
+
 		if (gObj != null) {
 			gObj.setPosition(pos);
 			r.addObject(gObj);
