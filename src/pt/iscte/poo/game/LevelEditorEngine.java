@@ -182,7 +182,7 @@ public class LevelEditorEngine extends Engine implements Observer {
 
         String folderPath = "./rooms";
 
-        for (int i = deletedNumber+1; i<allRooms.size(); i++) {
+        for (int i = deletedNumber+1; i<=allRooms.size(); i++) {
             Path filePath = Paths.get(folderPath+"/room"+i+".txt");
             Path destinationPath = Paths.get(folderPath+"/room"+(i-1)+".txt");
 
