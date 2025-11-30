@@ -6,12 +6,13 @@ import java.util.List;
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.utils.Collidable;
+import pt.iscte.poo.utils.GameObjectList;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Tags;
 import pt.iscte.poo.utils.Vector2D;
 
 public abstract class GameObject implements ImageTile, Tags, Collidable{
-	
+
 	private Point2D position;
 	private Room room;
 	private List<String> tagList;
@@ -25,6 +26,10 @@ public abstract class GameObject implements ImageTile, Tags, Collidable{
 		this.position = position;
 		this.room = room;
 		tagList = new ArrayList<>();
+	}
+
+	public char getMapChar() {
+		return GameObjectList.getCharByGameObject(this);
 	}
 
 	@Override
