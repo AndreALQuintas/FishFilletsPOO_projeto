@@ -6,7 +6,7 @@ public class Krab extends GameObject {
 	
 	public Krab(Room room) {
 		super(room);
-		addTag("Light");
+		addTag("Enemy");
 	}
 	
 	@Override

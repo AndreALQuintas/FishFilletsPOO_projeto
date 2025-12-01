@@ -14,6 +14,7 @@ public abstract class GameCharacter extends GameObject {
 	private String currentDir = "Left";
 	public GameCharacter(Room room) {
 		super(room);
+		addTag("Player");
 	}
 
 	public String getCurrentDir() {
@@ -76,7 +77,7 @@ public abstract class GameCharacter extends GameObject {
 		if (otherDestinationObject != null) {
 			if (!push(otherDestinationObject, dir)) return false;
 		}
-		
+
 		if (otherDestinationObject != null && otherDestinationObject.hasTag("Fixed"))
 			return false;
 
