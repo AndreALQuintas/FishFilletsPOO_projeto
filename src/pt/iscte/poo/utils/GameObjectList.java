@@ -18,6 +18,7 @@ public enum GameObjectList {
     TRAP(Trap.class, 'T', KeyEvent.VK_T, false),
     TRUNK(Trunk.class, 'Y', KeyEvent.VK_Y, false),
     WALL(Wall.class, 'W', KeyEvent.VK_W, false),
+    BUOY(Buoy.class, 'F', KeyEvent.VK_F, false)
     //WATER(Water.class, ' ')
     ;
 

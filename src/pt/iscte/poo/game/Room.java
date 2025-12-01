@@ -53,6 +53,7 @@ public class Room {
 			nonBackgroundObjects.add(obj);
 		if (obj.hasTag("TimeAffected"))
 			timeAffectedObjects.add(obj);
+
 		engine.updateGUI();
 	}
 
