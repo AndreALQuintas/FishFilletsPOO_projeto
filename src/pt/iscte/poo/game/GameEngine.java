@@ -119,15 +119,8 @@ public class GameEngine implements Observer {
 	
 	
 	public void changeScore() {
-		File score = new File("./score.txt");
-		
-		if(!score.exists()) {
-			try {
-				score.createNewFile();
-			}catch(IOException e) {
-				return;
-			}
-		}
+		File score = new File("score.txt");
+		System.out.println(score.getAbsolutePath());
 		ArrayList<User> users= new ArrayList<>();
 		String name = gui.askUser("Qual é o seu username");
 		Time time = timeAsClass();
@@ -139,21 +132,42 @@ public class GameEngine implements Observer {
 				users.add(new User(data[0], Integer.parseInt(data[1]),new Time(Integer.parseInt(data[2]))));
 			}
 			User thisUser =new User(name,totalMoveCount, time);
+			System.out.println(thisUser);
 			//Verifica se user já existe no score
+			
+			
+			users.sort((a,b)->{
+				if(a.getMoveCount()==b.getMoveCount()) {
+					return a.getTime().totalSeconds()-b.getTime().totalSeconds();
+				}return a.getMoveCount()-b.getMoveCount();
+			});
+			boolean foundTheSame= false;
 			for(User u: users) {
-				if(u.getName()==thisUser.getName()) {
+				if(u.getName().equals(thisUser.getName())){
+					foundTheSame=true;
 					if(u.getMoveCount()==thisUser.getMoveCount()) {
 						if(u.getTime().totalSeconds()<thisUser.getTime().totalSeconds()) {
 							users.remove(u);
 							users.add(thisUser);
+							
 						}
-					}else {
-						if(u.getMoveCount()<thisUser.getMoveCount()) {
-							users.remove(u);
-							users.add(thisUser);
-						}
+					}else if(u.getMoveCount()>thisUser.getMoveCount()) {
+						users.remove(u);
+						users.add(thisUser);
 					}
 				}
+			}
+			if(!foundTheSame && !users.isEmpty() ) {
+				User worstUser = users.getLast();
+				if(worstUser.getMoveCount()==thisUser.getMoveCount()) {
+					if(worstUser.getTime().isOtherBigger(thisUser.getTime())) {
+						users.removeLast();
+						users.add(thisUser);
+					}
+				}
+			}
+			if(users.size()<10 && !foundTheSame) {
+				users.add(thisUser);
 			}
 			
 			scanner.close();
@@ -166,7 +180,7 @@ public class GameEngine implements Observer {
 			if(users.size()>10) {
 				users.removeLast();
 			}
-			PrintWriter writer=new PrintWriter(new FileWriter(score, false));
+			PrintWriter writer=new PrintWriter(new FileWriter(score,false));
 			for(User user: users) {
 				writer.println(user.toString());
 			}
@@ -183,7 +197,11 @@ public class GameEngine implements Observer {
 	
 	
 	public void showScore(ArrayList<User> users) {
-		
+		String shown = "";
+		for(User user: users) {
+			shown += user.getName() + ": Passos- " + user.getMoveCount() + " Tempo- " + user.getTime().toString() + "\n" ;
+		}
+		gui.showMessage("Top 10 highscores", shown);
 	}
 
 
