@@ -95,7 +95,7 @@ public abstract class GameCharacter extends GameObject {
 		currentDir = "Right";
 	}
 	
-	public void move(Vector2D dir) {
+	public boolean move(Vector2D dir) {
 
 		if (dir.equals(Direction.LEFT.asVector())) {
 			currentDir = "Left";
@@ -111,13 +111,16 @@ public abstract class GameCharacter extends GameObject {
 		if (destinationObject == null) {
 			setPosition(destination);
 			moveCount++;
+			return true;
 		} else {
 			if (doCollision(destinationObject, dir)) {
 				setPosition(destination);
 				destinationObject.doCollision(this, dir);
 				moveCount++;
+				return true;
 			}
 		}	
+		return false;
 
 	}
 	

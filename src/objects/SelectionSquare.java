@@ -28,11 +28,12 @@ public class SelectionSquare extends GameCharacter{
 	}
 
     @Override
-    public void move(Vector2D dir) {
+    public boolean move(Vector2D dir) {
         Point2D destination = getPosition().plus(dir); 
-        if (destination.getX() < 0 || destination.getX() > 9) return;
-        if (destination.getY() < 0 || destination.getY() > 9) return;
+        if (destination.getX() < 0 || destination.getX() > 9) return false;
+        if (destination.getY() < 0 || destination.getY() > 9) return false;
         setPosition(destination);
+        return true;
     }
 
     @Override

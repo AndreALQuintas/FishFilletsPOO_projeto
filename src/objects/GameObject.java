@@ -46,7 +46,7 @@ public abstract class GameObject implements ImageTile, Tags, Collidable{
 		if (this.hasTag("SuperHeavy") && other.hasTag("BigFish") ||
 			this.hasTag("Heavy") && other.hasTag("SmallFish") ||
 			this.hasTag("KillBigFish") && other.hasTag("BigFish") ||
-			this.hasTag("Enemy") && other.hasTag("Player")) {
+			this.hasTag("Enemy") && other.hasTag("SmallFish")) {
 
 			room.removeObject(other);
 			GameObject gObj = new BloodSplatter(room);

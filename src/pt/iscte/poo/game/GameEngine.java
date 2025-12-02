@@ -87,11 +87,14 @@ public class GameEngine extends Engine implements Observer {
 		else if (key == KeyEvent.VK_R)
 			resetCurrentRoom();
 		else if (Direction.isDirection(key) && gameRunning){
+			boolean moved;
 			if (currentPlayer == 'b') {
-				BigFish.getInstance().move(Direction.directionFor(key).asVector());
+				moved = BigFish.getInstance().move(Direction.directionFor(key).asVector());
 			} else {
-				SmallFish.getInstance().move(Direction.directionFor(key).asVector());
+				moved = SmallFish.getInstance().move(Direction.directionFor(key).asVector());
 			}
+			
+			if (!moved) return;
 
 			GameCharacter currentPlayerInstance = (currentPlayer == 'b') ? BigFish.getInstance() : SmallFish.getInstance();
 			Point2D newPos = currentPlayerInstance.getPosition();
@@ -99,12 +102,12 @@ public class GameEngine extends Engine implements Observer {
 				currentPlayerInstance.setLeftMap();
 				currentRoom.removeObject(currentPlayerInstance);
 				changePlayer();
-
+				
 				if (bothPlayersLeftMap()) {
 					goToNextRoom();
 				}
 			}
-
+			
 			doEnemyMovement();
 			updateMoveCount();
 			updateHeader();
@@ -234,6 +237,7 @@ public class GameEngine extends Engine implements Observer {
 		if (!rooms.containsKey(nextRoomName)) {
 			System.out.println("!!!JOGO ACABOU!!!");
 			changeScore();
+			pauseGame();
 			return;
 		}
 
