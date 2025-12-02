@@ -121,13 +121,6 @@ public class GameEngine extends Engine implements Observer {
 	private boolean bothPlayersLeftMap() {
 		return BigFish.getInstance().leftMap() && SmallFish.getInstance().leftMap();
 	}
-
-<<<<<<< HEAD
-=======
-	public void pauseGame() {
-		gameRunning = false;
-	}
-	
 	
 	public void changeScore() {
 		File score = new File("score.txt");
@@ -216,7 +209,6 @@ public class GameEngine extends Engine implements Observer {
 	}
 
 
->>>>>>> henrique
 	public void resetCurrentRoom(){
 		Room r = Room.readRoom(new File("./rooms/" + currentRoom.getName()), this);
 		rooms.put(currentRoom.getName(),r);
