@@ -129,7 +129,7 @@ public abstract class GameCharacter extends GameObject {
 		return 2;
 	}
 	
-	public void resetMoveCounter() {
-		moveCount = 0;
+	public void setMoveCount(int moves) {
+		moveCount = moves;
 	}
 }

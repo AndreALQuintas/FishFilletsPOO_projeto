@@ -2,10 +2,15 @@ package pt.iscte.poo.game;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import objects.SmallFish;
 import objects.BigFish;
@@ -19,10 +24,15 @@ import pt.iscte.poo.observer.Observer;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.EnemyMove;
 import pt.iscte.poo.utils.Point2D;
+import pt.iscte.poo.utils.Time;
+import pt.iscte.poo.utils.User;
 import pt.iscte.poo.utils.Vector2D;
 
 public class GameEngine extends Engine implements Observer {
 	private int totalMoveCount;
+	private int lastMoveCount = 0;
+	private int lastBigFishMoveCount=0;
+	private int lastSmallFishMoveCount=0;
 	private ImageGUI gui = ImageGUI.getInstance();
 	private Map<String,Room> rooms;
 	//private Room currentRoom;
@@ -112,11 +122,109 @@ public class GameEngine extends Engine implements Observer {
 		return BigFish.getInstance().leftMap() && SmallFish.getInstance().leftMap();
 	}
 
+<<<<<<< HEAD
+=======
+	public void pauseGame() {
+		gameRunning = false;
+	}
+	
+	
+	public void changeScore() {
+		File score = new File("score.txt");
+		System.out.println(score.getAbsolutePath());
+		ArrayList<User> users= new ArrayList<>();
+		String name = gui.askUser("Qual é o seu username");
+		Time time = timeAsClass();
+		try{
+			Scanner scanner = new Scanner(score);
+			while(scanner.hasNextLine()) {
+				String line=scanner.nextLine();
+				String[] data=line.split(" ");
+				users.add(new User(data[0], Integer.parseInt(data[1]),new Time(Integer.parseInt(data[2]))));
+			}
+			User thisUser =new User(name,totalMoveCount, time);
+			System.out.println(thisUser);
+			//Verifica se user já existe no score
+			
+			
+			users.sort((a,b)->{
+				if(a.getMoveCount()==b.getMoveCount()) {
+					return a.getTime().totalSeconds()-b.getTime().totalSeconds();
+				}return a.getMoveCount()-b.getMoveCount();
+			});
+			boolean foundTheSame= false;
+			for(User u: users) {
+				if(u.getName().equals(thisUser.getName())){
+					foundTheSame=true;
+					if(u.getMoveCount()==thisUser.getMoveCount()) {
+						if(u.getTime().totalSeconds()<thisUser.getTime().totalSeconds()) {
+							users.remove(u);
+							users.add(thisUser);
+							
+						}
+					}else if(u.getMoveCount()>thisUser.getMoveCount()) {
+						users.remove(u);
+						users.add(thisUser);
+					}
+				}
+			}
+			if(!foundTheSame && !users.isEmpty() ) {
+				User worstUser = users.getLast();
+				if(worstUser.getMoveCount()==thisUser.getMoveCount()) {
+					if(worstUser.getTime().isOtherBigger(thisUser.getTime())) {
+						users.removeLast();
+						users.add(thisUser);
+					}
+				}
+			}
+			if(users.size()<10 && !foundTheSame) {
+				users.add(thisUser);
+			}
+			
+			scanner.close();
+			
+			users.sort((a,b)->{
+				if(a.getMoveCount()==b.getMoveCount()) {
+					return a.getTime().totalSeconds()-b.getTime().totalSeconds();
+				}return a.getMoveCount()-b.getMoveCount();
+			});
+			if(users.size()>10) {
+				users.removeLast();
+			}
+			PrintWriter writer=new PrintWriter(new FileWriter(score,false));
+			for(User user: users) {
+				writer.println(user.toString());
+			}
+			writer.close();
+		}catch(FileNotFoundException e) {
+			System.out.println("Ficheiro não encontrado.");
+			return;
+		}catch(IOException e) {
+			return;
+		}
+		showScore(users);
+		
+	}
+	
+	
+	public void showScore(ArrayList<User> users) {
+		String shown = "";
+		for(User user: users) {
+			shown += user.getName() + ": Passos- " + user.getMoveCount() + " Tempo- " + user.getTime().toString() + "\n" ;
+		}
+		gui.showMessage("Top 10 highscores", shown);
+	}
+
+
+>>>>>>> henrique
 	public void resetCurrentRoom(){
 		Room r = Room.readRoom(new File("./rooms/" + currentRoom.getName()), this);
 		rooms.put(currentRoom.getName(),r);
 		currentRoom = r;
 		currentPlayer = 'b';
+		totalMoveCount=lastMoveCount;
+		BigFish.getInstance().setMoveCount(lastBigFishMoveCount);
+		SmallFish.getInstance().setMoveCount(lastSmallFishMoveCount);
 		updateGUI();
 		
 		SmallFish.getInstance().reset(currentRoom);
@@ -133,6 +241,7 @@ public class GameEngine extends Engine implements Observer {
 		
 		if (!rooms.containsKey(nextRoomName)) {
 			System.out.println("!!!JOGO ACABOU!!!");
+			changeScore();
 			return;
 		}
 
@@ -143,6 +252,9 @@ public class GameEngine extends Engine implements Observer {
 	private void changeRoom(String room) {
 		currentRoom = rooms.get(room);
 		currentPlayer = 'b';
+		lastMoveCount= totalMoveCount;
+		lastBigFishMoveCount=BigFish.getInstance().getMoves();
+		lastSmallFishMoveCount=SmallFish.getInstance().getMoves();
 		updateGUI();
 		SmallFish.getInstance().reset(currentRoom);
 		BigFish.getInstance().reset(currentRoom);
@@ -239,8 +351,20 @@ public class GameEngine extends Engine implements Observer {
 		int seconds=(gui.getTicks()/2);
 		int minutes=seconds/60;
 		seconds-=minutes*60;
+		String s=String.valueOf(seconds);
+		String m=String .valueOf(minutes);
+		if(seconds<10) {
+			s = "0" + s;
+		}
+		if(minutes<10) {
+			m = "0" + m;
+		}
 		
-		return minutes + ":" + seconds;
+		return m + ":" + s;
+	}
+	
+	public Time timeAsClass() {
+		return new Time(gui.getTicks()/2);
 	}
 	
 	public void updateHeader() {

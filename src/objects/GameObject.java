@@ -52,7 +52,7 @@ public abstract class GameObject implements ImageTile, Tags, Collidable{
 			GameObject gObj = new BloodSplatter(room);
 			gObj.setPosition(other.getPosition());
 			room.addObject(gObj);
-			room.endGame();
+			room.pauseGame();
 
 			return true;
 		}
