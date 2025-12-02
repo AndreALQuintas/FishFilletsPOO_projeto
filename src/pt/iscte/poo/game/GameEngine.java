@@ -234,6 +234,7 @@ public class GameEngine extends Engine implements Observer {
 		if (!rooms.containsKey(nextRoomName)) {
 			System.out.println("!!!JOGO ACABOU!!!");
 			changeScore();
+			pauseGame();
 			return;
 		}
 
