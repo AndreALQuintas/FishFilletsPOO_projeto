@@ -20,13 +20,13 @@ import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
-public class GameEngine implements Observer {
+public class GameEngine extends Engine implements Observer {
 	private int totalMoveCount;
 	private ImageGUI gui = ImageGUI.getInstance();
 	private Map<String,Room> rooms;
-	private Room currentRoom;
+	//private Room currentRoom;
 	private int lastTickProcessed = 0;
-	private boolean gameRunning = true;
+	//private boolean gameRunning = true;
 	private char currentPlayer = 'b';
 	private static final int INVALID_INPUT = -1;
 	private static final String nonGravityAffectedTags[] = {"Fixed", "BigFish", "SmallFish"};
@@ -35,7 +35,7 @@ public class GameEngine implements Observer {
 		rooms = new HashMap<String,Room>();
 		loadGame();
 		currentRoom = rooms.get("room0.txt");
-		updateGUI();		
+		updateGUI();
 		SmallFish.getInstance().setRoom(currentRoom);
 		BigFish.getInstance().setRoom(currentRoom);
 		changeRoom(currentRoom.getName());
@@ -101,10 +101,6 @@ public class GameEngine implements Observer {
 
 	private boolean bothPlayersLeftMap() {
 		return BigFish.getInstance().leftMap() && SmallFish.getInstance().leftMap();
-	}
-
-	public void endGame() {
-		gameRunning = false;
 	}
 
 	public void resetCurrentRoom(){
@@ -223,13 +219,6 @@ public class GameEngine implements Observer {
 				{currentRoom.removeObject(gObj);}
 			else
 				{((Explosion) gObj).setDone();}
-		}
-	}
-
-	public void updateGUI() {
-		if(currentRoom!=null) {
-			ImageGUI.getInstance().clearImages();
-			ImageGUI.getInstance().addImages(currentRoom.getObjects());
 		}
 	}
 	

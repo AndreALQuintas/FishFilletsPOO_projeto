@@ -6,12 +6,13 @@ import java.util.List;
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.utils.Collidable;
+import pt.iscte.poo.utils.GameObjectList;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Tags;
 import pt.iscte.poo.utils.Vector2D;
 
 public abstract class GameObject implements ImageTile, Tags, Collidable{
-	
+
 	private Point2D position;
 	private Room room;
 	private List<String> tagList;
@@ -27,6 +28,10 @@ public abstract class GameObject implements ImageTile, Tags, Collidable{
 		tagList = new ArrayList<>();
 	}
 
+	public char getMapChar() {
+		return GameObjectList.getCharByGameObject(this);
+	}
+
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) {
 		System.out.println("auto collision with " + other.getName() + ", other.tags: " + other.getTagList());
@@ -36,10 +41,11 @@ public abstract class GameObject implements ImageTile, Tags, Collidable{
 			return true;
 		}
 
-		if (this.hasTag("SuperHeavy") && other.hasTag("BigFish") ||
-			this.hasTag("Heavy") && other.hasTag("SmallFish") ||
-			this.hasTag("KillBigFish") && other.hasTag("BigFish")) {
-			
+		if (!other.hasTag("Player")) return false;
+
+		if (this.hasTag("SuperHeavy") || this.hasTag("Heavy") ||
+			this.hasTag("KillBigFish") || this.hasTag("Enemy") ) {
+
 			room.removeObject(other);
 			GameObject gObj = new BloodSplatter(room);
 			gObj.setPosition(other.getPosition());
