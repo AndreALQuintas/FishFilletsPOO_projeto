@@ -2,24 +2,18 @@ package pt.iscte.poo.game;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import objects.Water;
-import objects.Anchor;
 import objects.BigFish;
-import objects.Bomb;
-import objects.Cup;
+import objects.GameCharacter;
 import objects.GameObject;
-import objects.HoledWall;
 import objects.SmallFish;
-import objects.SteelHorizontal;
-import objects.SteelVertical;
-import objects.Stone;
-import objects.Trap;
-import objects.Trunk;
-import objects.Wall;
+import pt.iscte.poo.utils.GameObjectList;
 import pt.iscte.poo.utils.Point2D;
 
 public class Room {
@@ -27,15 +21,18 @@ public class Room {
 	private List<GameObject> objects;
 	private List<GameObject> nonBackgroundObjects;
 	private List<GameObject> timeAffectedObjects;
+	private List<GameObject> enemyObjects;
 	private String roomName;
-	private GameEngine engine;
+	private Engine engine;
 	private Point2D smallFishStartingPosition;
 	private Point2D bigFishStartingPosition;
+	private static final int roomWidth = 10;
 	
 	public Room() {
 		objects = new ArrayList<GameObject>();
 		nonBackgroundObjects = new ArrayList<GameObject>();
 		timeAffectedObjects = new ArrayList<GameObject>();
+		enemyObjects = new ArrayList<GameObject>();
 	}
 
 	private void setName(String name) {
@@ -46,16 +43,21 @@ public class Room {
 		return roomName;
 	}
 	
-	private void setEngine(GameEngine engine) {
+	private void setEngine(Engine engine) {
 		this.engine = engine;
 	}
 
 	public void addObject(GameObject obj) {
+		if (obj instanceof GameCharacter && objects.contains(obj)) return;
+
 		objects.add(obj);
 		if (!obj.hasTag("Background"))
 			nonBackgroundObjects.add(obj);
 		if (obj.hasTag("TimeAffected"))
 			timeAffectedObjects.add(obj);
+		if (obj.hasTag("Enemy"))
+			enemyObjects.add(obj);
+
 		engine.updateGUI();
 	}
 
@@ -69,6 +71,8 @@ public class Room {
 			nonBackgroundObjects.remove(obj);
 		if (obj.hasTag("TimeAffected"))
 			timeAffectedObjects.remove(obj);
+		if (obj.hasTag("Enemy"))
+			enemyObjects.remove(obj);
 		engine.updateGUI();
 	}
 	
@@ -82,6 +86,10 @@ public class Room {
 
 	public List<GameObject> getTimeAffectedObjects() {
 		return timeAffectedObjects;
+	}
+
+	public List<GameObject> getEnemyObjects() {
+		return enemyObjects;
 	}
 
 	public void setSmallFishStartingPosition(Point2D heroStartingPosition) {
@@ -107,8 +115,38 @@ public class Room {
 		}
 		return null;
 	}
+
+	public static Room getEmptyRoom(String roomName, Engine engine) {
+		File file = new File("./rooms/" + roomName);
+        try {
+            if (file.createNewFile()) {
+				StringBuilder grid = new StringBuilder();
+				for (int i = 0; i < 10; i++) {
+					for (int j = 0; j < 10; j++) {
+						grid.append(" "); 
+					}
+					grid.append("\n");
+				}
+				
+				FileWriter writer;
+				try {
+					writer = new FileWriter(file);
+					writer.write(grid.toString());
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao criar o ficheiro");
+            e.printStackTrace();
+        }
+
+		return readRoom(file, engine);
+	}
 	
-	public static Room readRoom(File f, GameEngine engine) {
+	public static Room readRoom(File f, Engine engine) {
 		Room r = new Room();
 		r.setEngine(engine);
 		r.setName(f.getName());
@@ -116,13 +154,10 @@ public class Room {
 		Scanner scan;
 		try {
 			scan = new Scanner(f);
-			int y = 0, width = -1;
-
+			int y = 0;
 			while (scan.hasNextLine()) {
 				String line = scan.nextLine();
-				if (width == -1)
-					width = line.length();
-				for (int x = 0; x<width; x++) {
+				for (int x = 0; x<roomWidth; x++) {
 					GameObject water = new Water(r);
 					water.setPosition(new Point2D(x, y));
 					r.addObject(water);
@@ -131,47 +166,63 @@ public class Room {
 				}
 				y++;
 			}
+			scan.close();
 
 		} catch (FileNotFoundException e) {
 			System.out.println("Ficheiro nao encontrado");
 			e.printStackTrace();
 		}
-		
+
 		return r;
 		
 	}
 
 	private static void instanciateChar(Room r, char c, Point2D pos) {
-		GameObject gObj = null;
-		switch (c) {
-			case 'B':
-				gObj = BigFish.getInstance();
-				r.setBigFishStartingPosition(pos);
-				System.out.println("room: " + r.getName() + ", pos: " + pos);
-				break;
-			case 'S':
-				gObj = SmallFish.getInstance();
-				r.setSmallFishStartingPosition(pos);
-				break;
-			case 'W': gObj = new Wall(r);	break;
-			case 'H': gObj = new SteelHorizontal(r); break;
-			case 'V': gObj = new SteelVertical(r); break;
-			case 'C': gObj = new Cup(r); break;
-			case 'R': gObj = new Stone(r); break;
-			case 'A': gObj = new Anchor(r);	break;
-			case 'b': gObj = new Bomb(r); break;
-			case 'T': gObj = new Trap(r); break;
-			case 'Y': gObj = new Trunk(r); break;
-			case 'X': gObj = new HoledWall(r); break;
-			
-			default:
-				break;
-
+		GameObject gObj = GameObjectList.instantiate(c, r);
+		if (gObj instanceof BigFish) {
+			r.setBigFishStartingPosition(pos);
+		} else if (gObj instanceof SmallFish) {
+			r.setSmallFishStartingPosition(pos);
 		}
+
 		if (gObj != null) {
 			gObj.setPosition(pos);
 			r.addObject(gObj);
 		}	
+	}
+
+
+	public void exportToFile(String fileName) {
+		// VERIFICAR SE OS DOIS PEIXES TAO NA SALA
+		StringBuilder sb = new StringBuilder();
+		for (int y = 0; y < roomWidth; y++) {
+			for (int x = 0; x<roomWidth; x++) {
+				GameObject gObj = getObjectAtPoint(new Point2D(x, y));
+				if (gObj != null) {
+					char c = gObj.getMapChar();
+					if (c != '\0') {
+						sb.append(c);
+						continue;
+					}
+				}
+				sb.append(' ');
+			}
+			sb.append('\n');
+		}
+		
+		System.out.println(fileName);
+		System.out.println(sb.toString());
+
+		try {
+            FileWriter writer = new FileWriter("./rooms/" + fileName);
+            writer.write(sb.toString());
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Erro a escrever no ficheiro");
+            e.printStackTrace();
+        }
+
+
 	}
 	
 }

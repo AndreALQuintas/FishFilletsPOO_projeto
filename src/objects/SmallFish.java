@@ -1,6 +1,7 @@
 package objects;
 
 import pt.iscte.poo.game.Room;
+import pt.iscte.poo.utils.PushAction;
 import pt.iscte.poo.utils.Vector2D;
 
 public class SmallFish extends GameCharacter {
@@ -39,8 +40,13 @@ public class SmallFish extends GameCharacter {
 		}
 
 		for (String tag : canPushTags) {
-			if (other.hasTag(tag))
-				return push(other, dir);
+			if (other.hasTag(tag)) {
+				boolean canPush = push(other, dir);
+				if (!canPush) return false;
+				if (other instanceof PushAction) {
+					((PushAction)other).getPushedAction(other, dir);
+				}
+			}
 		}
 		return true;
 	}

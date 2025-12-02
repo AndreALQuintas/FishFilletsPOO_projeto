@@ -3,6 +3,7 @@ package objects;
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
+import pt.iscte.poo.utils.PushAction;
 import pt.iscte.poo.utils.Vector2D;
 
 public abstract class GameCharacter extends GameObject {
@@ -13,6 +14,7 @@ public abstract class GameCharacter extends GameObject {
 	private String currentDir = "Left";
 	public GameCharacter(Room room) {
 		super(room);
+		addTag("Player");
 	}
 
 	public String getCurrentDir() {
@@ -34,8 +36,7 @@ public abstract class GameCharacter extends GameObject {
 	public boolean push(GameObject other, Vector2D dir) {
 		Point2D otherDestination = other.getPosition().plus(dir); //MUDAR LIMITE
 		GameObject otherDestinationObject = getRoom().getObjectAtPoint(otherDestination);
-		/*if (otherDestination.getX() >= 10 || otherDestination.getY() >= 10) 
-			return false;*/
+		
 		if (otherDestinationObject == null) {
 			other.setPosition(otherDestination);
 			return true;
@@ -76,9 +77,9 @@ public abstract class GameCharacter extends GameObject {
 		if (otherDestinationObject != null) {
 			if (!push(otherDestinationObject, dir)) return false;
 		}
+
 		if (otherDestinationObject != null && otherDestinationObject.hasTag("Fixed"))
 			return false;
-		//Point2D nextObjectDestination = otherDestination.plus(dir);
 
 		other.setPosition(otherDestination);
 		return true;
