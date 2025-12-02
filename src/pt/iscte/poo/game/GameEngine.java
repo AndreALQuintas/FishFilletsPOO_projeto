@@ -301,6 +301,9 @@ public class GameEngine extends Engine implements Observer {
 
 	private void applyGravity(GameObject gObj) {
 		Vector2D dir = Direction.DOWN.asVector();
+		if(gObj.getName().equals("buoy")) {
+			dir=Direction.UP.asVector();
+		}
 		Point2D destination = gObj.getPosition().plus(dir);
 		GameObject destinationObject = currentRoom.getObjectAtPoint(destination);
 		if (destinationObject != null) {
