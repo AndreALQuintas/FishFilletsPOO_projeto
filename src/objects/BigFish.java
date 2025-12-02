@@ -45,6 +45,7 @@ public class BigFish extends GameCharacter {
 				if (other instanceof PushAction) {
 					((PushAction)other).getPushedAction(other, dir);
 				}
+				return true;
 			}
 		}
 		return true;

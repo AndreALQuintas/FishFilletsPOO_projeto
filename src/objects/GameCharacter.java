@@ -33,8 +33,16 @@ public abstract class GameCharacter extends GameObject {
 		leftMap = false;
 	}
 
+	public void killCharacter() {
+		getRoom().removeObject(this);
+		GameObject gObj = new BloodSplatter(getRoom());
+		gObj.setPosition(getPosition());
+		getRoom().addObject(gObj);
+		getRoom().pauseGame();
+	}
+
 	public boolean push(GameObject other, Vector2D dir) {
-		Point2D otherDestination = other.getPosition().plus(dir); //MUDAR LIMITE
+		Point2D otherDestination = other.getPosition().plus(dir);
 		GameObject otherDestinationObject = getRoom().getObjectAtPoint(otherDestination);
 		
 		if (otherDestinationObject == null) {
