@@ -17,6 +17,7 @@ import pt.iscte.poo.gui.ImageGUI;
 import pt.iscte.poo.observer.Observed;
 import pt.iscte.poo.observer.Observer;
 import pt.iscte.poo.utils.Direction;
+import pt.iscte.poo.utils.EnemyMove;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
@@ -94,8 +95,16 @@ public class GameEngine extends Engine implements Observer {
 				}
 			}
 
+			doEnemyMovement();
 			updateMoveCount();
 			updateHeader();
+		}
+	}
+
+	private void doEnemyMovement() {
+		for (GameObject gObj : currentRoom.getEnemyObjects()) {
+			if (gObj instanceof EnemyMove) 
+				((EnemyMove)gObj).doEnemyMove();
 		}
 	}
 
@@ -105,7 +114,6 @@ public class GameEngine extends Engine implements Observer {
 
 	public void resetCurrentRoom(){
 		Room r = Room.readRoom(new File("./rooms/" + currentRoom.getName()), this);
-		System.out.println(rooms);
 		rooms.put(currentRoom.getName(),r);
 		currentRoom = r;
 		currentPlayer = 'b';
