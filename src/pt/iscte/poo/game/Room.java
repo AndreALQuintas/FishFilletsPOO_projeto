@@ -61,8 +61,8 @@ public class Room {
 		engine.updateGUI();
 	}
 
-	public void endGame() {
-		engine.endGame();
+	public void pauseGame() {
+		engine.pauseGame();
 	}
 	
 	public void removeObject(GameObject obj) {
