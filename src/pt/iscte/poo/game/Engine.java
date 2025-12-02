@@ -13,7 +13,7 @@ public abstract class Engine {
 		}
 	}
     
-    public void endGame() {
+    public void pauseGame() {
 		gameRunning = false;
 	}
 }
