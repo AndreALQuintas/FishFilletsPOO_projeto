@@ -31,15 +31,17 @@ public class Bomb extends GameObject {
 			gObj.setPosition(pos);
 			r.addObject(gObj);
 			GameObject placedObject = r.getObjectAtPoint(pos);
-			if (placedObject != null)
+			if (placedObject != null) {
+				if (placedObject instanceof GameCharacter)
+					((GameCharacter)placedObject).killCharacter();
 				r.removeObject(placedObject);
+			}
 		}
 	}
 
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) {
 		if (isFalling && !other.hasTag("BigFish") && !other.hasTag("SmallFish")) {
-			System.out.println("BOOOOOOM");
 			doExplosion();
 			getRoom().removeObject(this);
 		}

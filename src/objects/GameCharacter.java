@@ -33,14 +33,22 @@ public abstract class GameCharacter extends GameObject {
 		leftMap = false;
 	}
 
+	public void killCharacter() {
+		getRoom().removeObject(this);
+		GameObject gObj = new BloodSplatter(getRoom());
+		gObj.setPosition(getPosition());
+		getRoom().addObject(gObj);
+		getRoom().pauseGame();
+	}
+
 	public boolean push(GameObject other, Vector2D dir) {
-		Point2D otherDestination = other.getPosition().plus(dir); //MUDAR LIMITE
+		Point2D otherDestination = other.getPosition().plus(dir);
 		GameObject otherDestinationObject = getRoom().getObjectAtPoint(otherDestination);
-		
+
 		if (otherDestinationObject == null) {
 			other.setPosition(otherDestination);
 			return true;
-		} else if (hasTag("SmallFish")) {
+		} else if (hasTag("SmallFish") || dir.equals(Direction.UP.asVector())) {
 			return false;
 		}
 		
@@ -56,10 +64,9 @@ public abstract class GameCharacter extends GameObject {
             }
         }
 
-
 		if (canPushNext) {
             if (push(otherDestinationObject, dir)) {
-                // Se o próximo objeto foi empurrado com sucesso, mover o objeto atual
+                // Se o próximo objeto foi empurrado com sucesso, mover o objeto atual recursivamente
                 other.setPosition(otherDestination);
                 return true;
             }
@@ -72,7 +79,6 @@ public abstract class GameCharacter extends GameObject {
                 return false;
             }
         }
-
 
 		if (otherDestinationObject != null) {
 			if (!push(otherDestinationObject, dir)) return false;
@@ -93,6 +99,26 @@ public abstract class GameCharacter extends GameObject {
 			setPosition(r.getSmallFishStartingPosition());
 		resetLeftMap();
 		currentDir = "Right";
+	}
+
+	@Override
+	public boolean doCollision(GameObject other, Vector2D dir) {
+		System.out.println(this.getName() + " collides with " + other.getName() + ", other.tags: " + other.getTagList());
+		for (String tag : getCantGoThroughTags()) {
+			if (other.hasTag(tag)) return false;
+		}
+		for (String tag : getCanPushTags()) {
+			if (other.hasTag(tag)) {
+				boolean canPush = push(other, dir);
+				if (!canPush) return false;
+				if (other instanceof PushAction)
+					((PushAction)other).getPushedAction(other, dir);
+				if (other.hasTag("OneTimeMove"))
+					other.addTag("Immovable");
+				break;
+			}
+		}
+		return true;
 	}
 	
 	public boolean move(Vector2D dir) {

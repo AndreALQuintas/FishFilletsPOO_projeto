@@ -1,14 +1,12 @@
 package objects;
 
 import pt.iscte.poo.game.Room;
-import pt.iscte.poo.utils.PushAction;
-import pt.iscte.poo.utils.Vector2D;
 
 public class SmallFish extends GameCharacter {
 
 	private static SmallFish sf = new SmallFish(null);
 
-	private static final String cantGoThroughTags[] = {"Wall", "Heavy", "BigFish"};
+	private static final String cantGoThroughTags[] = {"Wall", "Heavy", "BigFish", "Immovable"};
 	private static final String canPushTags[] = {"Light", "TempHeavy"};
 	
 	private SmallFish(Room room) {
@@ -29,26 +27,6 @@ public class SmallFish extends GameCharacter {
 	@Override
 	public int getLayer() {
 		return 2;
-	}
-
-	@Override
-	public boolean doCollision(GameObject other, Vector2D dir) {
-		System.out.println(this.getName() + " collides with " + other.getName() + ", other.tags: " + other.getTagList());
-		
-		for (String tag : cantGoThroughTags) {
-			if (other.hasTag(tag)) return false;
-		}
-
-		for (String tag : canPushTags) {
-			if (other.hasTag(tag)) {
-				boolean canPush = push(other, dir);
-				if (!canPush) return false;
-				if (other instanceof PushAction) {
-					((PushAction)other).getPushedAction(other, dir);
-				}
-			}
-		}
-		return true;
 	}
 
 	@Override

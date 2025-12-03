@@ -35,9 +35,7 @@ public class GameEngine extends Engine implements Observer {
 	private int lastSmallFishMoveCount=0;
 	private ImageGUI gui = ImageGUI.getInstance();
 	private Map<String,Room> rooms;
-	//private Room currentRoom;
 	private int lastTickProcessed = 0;
-	//private boolean gameRunning = true;
 	private char currentPlayer = 'b';
 	private static final int INVALID_INPUT = -1;
 	private static final String nonGravityAffectedTags[] = {"Fixed", "BigFish", "SmallFish"};
@@ -323,7 +321,7 @@ public class GameEngine extends Engine implements Observer {
 		lastTickProcessed++;
 		System.out.println("Tick done!");
 		List<GameObject> nonBackgroundObjects = new ArrayList<GameObject>(currentRoom.getNonBackgroundObjects());
-		for (GameObject gObj : nonBackgroundObjects) {
+		for (GameObject gObj : nonBackgroundObjects.reversed()) {
 			if (!hasNonGravityAffectedTag(gObj))
 				applyGravity(gObj);
 		}
