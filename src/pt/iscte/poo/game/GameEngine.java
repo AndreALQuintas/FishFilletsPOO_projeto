@@ -31,6 +31,8 @@ import pt.iscte.poo.utils.Vector2D;
 
 public class GameEngine extends Engine implements Observer {
 	private int totalMoveCount;
+	private int resetedRoomTime;
+	private int lastRoomTime;
 	private int lastMoveCount = 0;
 	private int lastBigFishMoveCount=0;
 	private int lastSmallFishMoveCount=0;
@@ -125,12 +127,13 @@ public class GameEngine extends Engine implements Observer {
 	}
 	
 	public void changeScore() {
+		totalMoveCount++;
 		File score = new File("score.txt");
 		System.out.println(score.getAbsolutePath());
 		ArrayList<User> users= new ArrayList<>();
 		String name = gui.askUser("Qual é o seu username");
 		System.out.println(name);
-		while(name.equals("")) {
+		while(name.equals("") || name==null) {
 			name=gui.askUser("Erro! Username inválido! \n Volte a introduzir o seu username");
 
 		}
@@ -165,18 +168,25 @@ public class GameEngine extends Engine implements Observer {
 					}
 				}
 			}
-			if(!foundTheSame && !users.isEmpty() ) {
-				User worstUser = users.getLast();
-				if(worstUser.getMoveCount()==thisUser.getMoveCount()) {
-					if(worstUser.getTime().isOtherBigger(thisUser.getTime())) {
+			
+			if(!foundTheSame) {
+				if(users.size()<10) {
+					users.add(thisUser);
+				}
+				else if(!users.isEmpty() ) {
+					User worstUser = users.getLast();
+					if(worstUser.getMoveCount()==thisUser.getMoveCount()) {
+						if(worstUser.getTime().isOtherBigger(thisUser.getTime())) {
+							users.removeLast();
+							users.add(thisUser);
+						}
+					}else if(worstUser.getMoveCount()>thisUser.getMoveCount()) {
 						users.removeLast();
 						users.add(thisUser);
 					}
 				}
 			}
-			if(users.size()<10 && !foundTheSame) {
-				users.add(thisUser);
-			}
+
 			
 			scanner.close();
 			
@@ -225,7 +235,8 @@ public class GameEngine extends Engine implements Observer {
 		BigFish.getInstance().reset(currentRoom);
 
 		gameRunning = true;
-		lastTickProcessed = ImageGUI.getInstance().getTicks();
+		lastTickProcessed = gui.getTicks();
+		resetedRoomTime = gui.getTicks()-lastRoomTime;
 	}
 
 	private void goToNextRoom() {
@@ -253,6 +264,7 @@ public class GameEngine extends Engine implements Observer {
 		updateGUI();
 		SmallFish.getInstance().reset(currentRoom);
 		BigFish.getInstance().reset(currentRoom);
+		lastRoomTime=gui.getTicks()-resetedRoomTime;
 	}
 
 	private void updateFallingState() {
@@ -346,7 +358,7 @@ public class GameEngine extends Engine implements Observer {
 	
 	public String totalTime() {
 		
-		int seconds=(gui.getTicks()/2);
+		int seconds=((gui.getTicks()-resetedRoomTime)/2);
 		int minutes=seconds/60;
 		seconds-=minutes*60;
 		String s=String.valueOf(seconds);
