@@ -42,7 +42,6 @@ public class Bomb extends GameObject {
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) {
 		if (isFalling && !other.hasTag("BigFish") && !other.hasTag("SmallFish")) {
-			System.out.println("BOOOOOOM");
 			doExplosion();
 			getRoom().removeObject(this);
 		}

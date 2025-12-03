@@ -7,6 +7,7 @@ public class Anchor extends GameObject {
 	public Anchor(Room room) {
 		super(room);
 		addTag("Heavy");
+		addTag("OneTimeMove");
 	}
 	
 	@Override
