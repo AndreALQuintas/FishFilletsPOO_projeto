@@ -24,6 +24,7 @@ import pt.iscte.poo.observer.Observer;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.EnemyMove;
 import pt.iscte.poo.utils.Point2D;
+import pt.iscte.poo.utils.ScoreComparator;
 import pt.iscte.poo.utils.Time;
 import pt.iscte.poo.utils.User;
 import pt.iscte.poo.utils.Vector2D;
@@ -128,6 +129,11 @@ public class GameEngine extends Engine implements Observer {
 		System.out.println(score.getAbsolutePath());
 		ArrayList<User> users= new ArrayList<>();
 		String name = gui.askUser("Qual é o seu username");
+		System.out.println(name);
+		while(name.equals("")) {
+			name=gui.askUser("Erro! Username inválido! \n Volte a introduzir o seu username");
+
+		}
 		Time time = timeAsClass();
 		try{
 			Scanner scanner = new Scanner(score);
@@ -140,12 +146,9 @@ public class GameEngine extends Engine implements Observer {
 			System.out.println(thisUser);
 			//Verifica se user já existe no score
 			
+			ScoreComparator comp= new ScoreComparator();
+			users.sort(comp);
 			
-			users.sort((a,b)->{
-				if(a.getMoveCount()==b.getMoveCount()) {
-					return a.getTime().totalSeconds()-b.getTime().totalSeconds();
-				}return a.getMoveCount()-b.getMoveCount();
-			});
 			boolean foundTheSame= false;
 			for(User u: users) {
 				if(u.getName().equals(thisUser.getName())){
@@ -177,11 +180,8 @@ public class GameEngine extends Engine implements Observer {
 			
 			scanner.close();
 			
-			users.sort((a,b)->{
-				if(a.getMoveCount()==b.getMoveCount()) {
-					return a.getTime().totalSeconds()-b.getTime().totalSeconds();
-				}return a.getMoveCount()-b.getMoveCount();
-			});
+			users.sort(comp);
+
 			if(users.size()>10) {
 				users.removeLast();
 			}
@@ -204,6 +204,7 @@ public class GameEngine extends Engine implements Observer {
 	public void showScore(ArrayList<User> users) {
 		String shown = "";
 		for(User user: users) {
+			System.out.println(user);
 			shown += user.getName() + ": Passos- " + user.getMoveCount() + " Tempo- " + user.getTime().toString() + "\n" ;
 		}
 		gui.showMessage("Top 10 highscores", shown);
