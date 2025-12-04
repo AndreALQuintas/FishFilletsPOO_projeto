@@ -5,7 +5,6 @@ import pt.iscte.poo.game.Room;
 public class SmallFish extends GameCharacter {
 
 	private static SmallFish sf = new SmallFish(null);
-
 	private static final String cantGoThroughTags[] = {"Wall", "Heavy", "BigFish", "Immovable"};
 	private static final String canPushTags[] = {"Light", "TempHeavy"};
 	

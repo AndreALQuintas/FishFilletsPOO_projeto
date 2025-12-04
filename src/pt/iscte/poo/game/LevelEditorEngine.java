@@ -12,6 +12,7 @@ import java.util.List;
 import objects.BigFish;
 import objects.GameCharacter;
 import objects.GameObject;
+import objects.Portal;
 import objects.SelectionSquare;
 import objects.SmallFish;
 import pt.iscte.poo.gui.ImageGUI;
@@ -253,11 +254,22 @@ public class LevelEditorEngine extends Engine implements Observer {
     }
 
     private boolean askToSave() {
-
         if (!currentRoom.getNonBackgroundObjects().contains(BigFish.getInstance()) ||
             !currentRoom.getNonBackgroundObjects().contains(SmallFish.getInstance())) {
                 gui.showMessage("Aviso", "E necessario conter ambos os peixes para completar o nivel");
                 return false;
+        }
+
+        int portalCount = 0;
+        for (GameObject obj : currentRoom.getNonBackgroundObjects()) {
+            if (obj instanceof Portal) {
+                portalCount++;
+            }
+        }
+
+        if (portalCount != 0 && portalCount != 2) {
+            gui.showMessage("Aviso", "E necessario conter 0 ou 2 portais para completar o nivel");            
+            return false;
         }
 
         String answer = null;

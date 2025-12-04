@@ -19,16 +19,20 @@ public class Buoy extends GameObject {
 
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) {
-		if (!dir.equals(Direction.UP.asVector())) return true;
+		if (!dir.equals(Direction.UP.asVector())) return super.doCollision(other, dir);
 
 		if (other.hasTag("Heavy") || other.hasTag("Light")) {
-			System.out.println(getRoom().getObjectAtPoint(getPosition().plus(Direction.DOWN.asVector())));
-			if (getRoom().getObjectAtPoint(getPosition().plus(Direction.DOWN.asVector())) == null) {
+			GameObject downObject = getRoom().getObjectAtPoint(getPosition().plus(Direction.DOWN.asVector()));
+			System.out.println(downObject);
+			if (downObject == null) {
 				setPosition(getPosition().plus(Direction.DOWN.asVector()));
+			} else {
+				super.doCollision(downObject, dir);
+				System.out.println("OTHERRRRR: " + other.getName());
 			}
 			
 		}
-		return false;
+		return super.doCollision(other, dir);
 	}
 	
 	@Override

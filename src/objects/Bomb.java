@@ -7,6 +7,7 @@ import pt.iscte.poo.utils.Vector2D;
 
 public class Bomb extends GameObject {
 	private boolean isFalling = false;
+	private static final String[] nonExplodingTags = {"Player", "Portal"};
 	public Bomb(Room room) {
 		super(room);
 		addTag("Light");
@@ -41,7 +42,11 @@ public class Bomb extends GameObject {
 
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) {
-		if (isFalling && !other.hasTag("BigFish") && !other.hasTag("SmallFish")) {
+		if (isFalling) {
+			for (String tag : nonExplodingTags) {
+				if (other.hasTag(tag))
+					return super.doCollision(other, dir);
+			}
 			doExplosion();
 			getRoom().removeObject(this);
 		}

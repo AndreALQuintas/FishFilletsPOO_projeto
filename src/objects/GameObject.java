@@ -34,7 +34,12 @@ public abstract class GameObject implements ImageTile, Tags, Collidable{
 
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) {
-		System.out.println("auto collision with " + other.getName() + ", other.tags: " + other.getTagList());
+		System.out.println("auto collision " + getName() + " with " + other.getName() + ", other.tags: " + other.getTagList());
+
+		if (other.hasTag("Portal")) {
+			other.doCollision(this, dir);
+			return false;
+		}
 
 		if (this.hasTag("Heavy") && !this.hasTag("TempHeavy") && other.hasTag("Smashable")) {
 			room.removeObject(other);

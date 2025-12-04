@@ -39,7 +39,7 @@ public class GameEngine extends Engine implements Observer {
 	private int lastTickProcessed = 0;
 	private char currentPlayer = 'b';
 	private static final int INVALID_INPUT = -1;
-	private static final String nonGravityAffectedTags[] = {"Fixed", "BigFish", "SmallFish"};
+	private static final String nonGravityAffectedTags[] = {"Fixed", "BigFish", "SmallFish", "Portal"};
 	
 	public GameEngine() {
 		rooms = new HashMap<String,Room>();

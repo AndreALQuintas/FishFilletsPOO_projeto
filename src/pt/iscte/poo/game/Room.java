@@ -12,6 +12,7 @@ import objects.Water;
 import objects.BigFish;
 import objects.GameCharacter;
 import objects.GameObject;
+import objects.Portal;
 import objects.SmallFish;
 import pt.iscte.poo.utils.GameObjectList;
 import pt.iscte.poo.utils.Point2D;
@@ -151,6 +152,8 @@ public class Room {
 		r.setEngine(engine);
 		r.setName(f.getName());
 		
+		Portal firstPortal = null;
+
 		Scanner scan;
 		try {
 			scan = new Scanner(f);
@@ -161,11 +164,19 @@ public class Room {
 					GameObject water = new Water(r);
 					water.setPosition(new Point2D(x, y));
 					r.addObject(water);
-					if (x < line.length())
-						instanciateChar(r, line.charAt(x), new Point2D(x, y));
+					if (x < line.length()) {
+						GameObject gObj = instanciateChar(r, line.charAt(x), new Point2D(x, y));
+						if (gObj instanceof Portal) {
+							if (firstPortal == null)
+								firstPortal = (Portal) gObj;
+							else
+								firstPortal.linkPortals((Portal)gObj);
+						}
+					}
 				}
 				y++;
 			}
+
 			scan.close();
 
 		} catch (FileNotFoundException e) {
@@ -177,7 +188,7 @@ public class Room {
 		
 	}
 
-	private static void instanciateChar(Room r, char c, Point2D pos) {
+	private static GameObject instanciateChar(Room r, char c, Point2D pos) {
 		GameObject gObj = GameObjectList.instantiate(c, r);
 		if (gObj instanceof BigFish) {
 			r.setBigFishStartingPosition(pos);
@@ -188,7 +199,10 @@ public class Room {
 		if (gObj != null) {
 			gObj.setPosition(pos);
 			r.addObject(gObj);
+
+			return gObj;
 		}	
+		return null;
 	}
 
 
