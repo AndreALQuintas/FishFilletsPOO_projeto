@@ -16,20 +16,9 @@ public class Portal extends GameObject{
 		otherPortal.otherPortal = this;
 	}
 	
-	public void teleport(GameObject other) {
-		other.setPosition(otherPortal.getPosition());
-	}
-
-	
 	@Override
 	public boolean doCollision(GameObject other, Vector2D dir) {
-		System.out.println("MKMKMKMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
-		System.out.println(other.getName());
-		System.out.println(other.getPosition());
-		System.out.println(otherPortal.getPosition());
 		other.setPosition(otherPortal.getPosition());
-		System.out.println(other.getPosition());
-
 		return true;
 	}
 
